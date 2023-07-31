@@ -36,6 +36,7 @@ export default {
 			this.$http[metodo](`/insert`, this.dado)
             .then(resp => {
                 this.obterdados()
+                this.dado.texto = ''
                 console.log(resp)
             })
 				// .then(_ => {
