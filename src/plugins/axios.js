@@ -9,7 +9,7 @@ Vue.use({
     install(Vue) {
         // Vue.prototype.$http = axios
         Vue.prototype.$http = axios.create({
-            baseURL: 'http://10.11.1.101:3000/',
+            baseURL: 'http://127.0.0.1:3000/',
             headers: {
                 "Authorization": "abc123"
             }
