@@ -5,11 +5,13 @@ import axios from 'axios'
 // axios.defaults.headers.common['Authorization'] = 'abc123'
 // axios.defaults.headers.get['Accepts'] = 'application/json'
 
+console.log('Ambiente', process.env, process.env.NODE_ENV == 'development')
+
 Vue.use({
     install(Vue) {
         // Vue.prototype.$http = axios
         Vue.prototype.$http = axios.create({
-            baseURL: 'http://35.184.93.99:3000/',
+            baseURL: process.env.NODE_ENV == 'development' ? 'http://localhost:3000/' : 'http://35.184.93.99:3000/',
             //baseURL: 'http://localhost:3000/',
             headers: {
                 "Authorization": "abc123"

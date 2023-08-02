@@ -16,5 +16,9 @@ export default {
     .header {
         grid-area: header;
         margin-top: 0px;
+        max-height: 10px;
+    }
+    img {
+        max-height: 100px;
     }
 </style>

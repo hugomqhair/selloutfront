@@ -1,15 +1,17 @@
 <template>
   <div id="app">
     <Header></Header>
+    <b-container>
+      <ListarProduto></ListarProduto>
+    </b-container>
     <!-- <Body msg="Mensagem Modelo"/> -->
-    <Listar></Listar>
     <Footer id="footer"></Footer>
   </div>
 </template>
 
 <script>
 // import Body from './components/Body.vue'
-import Listar from './components/Listar.vue'
+import ListarProduto from './components/ListarProduto.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 
@@ -17,7 +19,7 @@ export default {
   name: 'App',
   components: {
     // Body,
-    Listar,
+    ListarProduto,
     Header,
     Footer
   }
