@@ -2,13 +2,16 @@
   <div id="app">
     <Header></Header>
     <b-container>
-      <router-view></router-view>
+      <ListarProduto></ListarProduto>
     </b-container>
-    <Footer></Footer>
+    <!-- <Body msg="Mensagem Modelo"/> -->
+    <Footer id="footer"></Footer>
   </div>
 </template>
 
 <script>
+// import Body from './components/Body.vue'
+import ListarProduto from './components/ListarProduto.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 
@@ -16,6 +19,7 @@ export default {
   name: 'App',
   components: {
     // Body,
+    ListarProduto,
     Header,
     Footer
   }
@@ -23,17 +27,13 @@ export default {
 </script>
 
 <style>
-*{
-  /* background-color:#1f1f1f; */
-  margin: 0;
-}
 #app {
   background-color:#1f1f1f;
   font-family:Montserrat;
   
   height: 100vh;
   display: grid;
-  grid-template-rows: 17vh 1fr 10vh;
+  grid-template-rows: 20% 1fr 20vh;
   grid-template-areas: 
       "header"
       "modelo"

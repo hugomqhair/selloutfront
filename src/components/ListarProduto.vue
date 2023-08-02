@@ -18,15 +18,14 @@
 export default {
     data() {
         return {
-            dados: [
-                {id:1, nome:'PRANCHA', qtdneg:0},
-                { id:2, nome:'SECADOR', qtdneg:0},
-                {id:3, nome:'MAQ CORTE', qtdneg:0},
-                {id:4, nome:'ESC 001.01', qtdneg:0},
-                {id:5, nome:'ESC 002.01', qtdneg:0},
-                {id:6, nome:'MODELADOR CURLING', qtdneg:0},
-                {id:7, nome:'PRANCHA SLIM', qtdneg:0},
-            ],
+            dados: [],
+            // {id:1, nome:'PRANCHA', qtdneg:0},
+            // { id:2, nome:'SECADOR', qtdneg:0},
+            // {id:3, nome:'MAQ CORTE', qtdneg:0},
+            // {id:4, nome:'ESC 001.01', qtdneg:0},
+            // {id:5, nome:'ESC 002.01', qtdneg:0},
+            // {id:6, nome:'MODELADOR CURLING', qtdneg:0},
+            // {id:7, nome:'PRANCHA SLIM', qtdneg:0},
             id: null,
         }
     },
@@ -79,6 +78,6 @@ export default {
 }
 
 #listarProduto{
-    font-size: 1.7em;
+    font-size: 1.2em;
 }
 </style>

@@ -13,8 +13,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .footer{
+        background-color:#1f1f1f;
         grid-area: footer;
         /* padding-right: 10px; */
-        margin-bottom: 0px;
+        margin-bottom: 20px;
+    }
+    img {
+        max-height: 100px;
     }
 </style>
