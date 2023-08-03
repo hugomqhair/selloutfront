@@ -1,16 +1,16 @@
 <template>
     <div class="listarProduto">
         <b-list-group >
-            <b-list-group-item v-for="dado in dados" class="d-flex justify-content-between align-items-center" id="listarProduto" :key="dado.id">
+            <b-list-group-item v-for="dado in dados" class="d-flex justify-content-between align-items-center" id="listarProduto" :key="dado.idproduto">
                 <div>
-                    <b-avatar variant="success" icon="plus-square" class="mr-3" button :key="dado.id" @click="contar(dado.id,1)"></b-avatar>
-                    <b-avatar variant="danger" icon="file-minus"   class="mr-3" button :key="`${dado.id}-menos`"  @click="contar(dado.id,-1)"></b-avatar>
+                    <b-avatar variant="success" icon="plus-square" class="mr-3" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
+                    <b-avatar variant="danger" icon="file-minus"   class="mr-3" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
                 </div>
                 {{ dado.descrprod }} 
                 <b-badge variant="dark">{{ dado.qtdneg }}</b-badge>
             </b-list-group-item>
         </b-list-group>
-        <!-- <p v-for="dado in dados" :key="dado.id"> {{ dado.id }} - {{ dado.texto }}</p> -->
+        <!-- <p v-for="dado in dados" :key="dado.idproduto"> {{ dado.idproduto }} - {{ dado.texto }}</p> -->
     </div>
 </template>
 
@@ -27,15 +27,17 @@ export default {
             // {id:6, nome:'MODELADOR CURLING', qtdneg:0},
             // {id:7, nome:'PRANCHA SLIM', qtdneg:0},
             id: null,
+            selloutid : this.$route.params.id
         }
     },
     created() {
-        this.obterdados()
+        this.obterdados(this.selloutid)
+        //console.log('idsellout', this.selloutid)
     },
     methods: {
         contar(id, val){
             //this.qtdneg += val
-            const item = this.dados.find(item => item.id === id);
+            const item = this.dados.find(item => item.idproduto === id);
             item.qtdneg += val;
         },
         salvar() {
@@ -54,8 +56,8 @@ export default {
             // 	})
             // })
         },
-        obterdados() {
-            this.$http.get('consulta?operacao=produto').then(res => {
+        obterdados(idsellout) {
+            this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
                 console.log('obterDados:', res)
                 this.dados = res.data
                 console.log(res.data)
