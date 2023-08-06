@@ -4,29 +4,29 @@
       <div>
         <b-card title="Olá Fulano" sub-title="Iniciar dia">
           <div>
-            <b-form-datepicker id="datepicker-valid" :state="true" v-model="dtcad"
+            <b-form-datepicker id="datepicker-valid" :state="true" v-model="dtcad" 
               placeholder="Selecionar data das vendas"></b-form-datepicker>
           </div>
 
           <div class="mt-3">
             <span>Seleciona a Loja</span>
-            <b-form-select v-model="selected" :options="optionsLojas"></b-form-select>
-            <div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
+            <b-form-select v-model="selected" :options="optionsLojas" align="center"></b-form-select>
+            <!-- <div class="mt-3">Selected: <strong>{{ selected }}</strong></div> -->
           </div>
 
           <div>
-            <b-button block variant="success" @click="confirmaDia">Iniciar Dia</b-button>
+            <b-button class="mt-3" block variant="success" @click="confirmaDia">Iniciar Dia</b-button>
           </div>
-          <router-link to="/SelloutItem"><a>Items</a></router-link>
         </b-card>
         <p>Valor da Data: {{ dtcad }}</p>
 
-        <b-card-group deck>
-          <b-card v-for="sellout in sellouts" :key="sellout.id"
-            border-variant="light" :header="sellout.fmt_dtmov" header-bg-variant="dark" header-text-variant="success" align="center">
+        <b-card-group columns>
+          <b-card v-for="sellout in sellouts" :key="sellout.id" border-variant="light" :header="sellout.fmt_dtmov"
+            header-bg-variant="dark" header-text-variant="success" align="center">
             <b-card-text>
               {{ sellout.loja }}
-              <b-avatar variant="success" icon="box-arrow-in-up-right"  class="ml-3" button @click="selloutitem(sellout.id)"></b-avatar>
+              <b-avatar variant="success" icon="box-arrow-in-up-right" class="ml-3" button
+                @click="selloutitem(sellout.id)"></b-avatar>
             </b-card-text>
           </b-card>
         </b-card-group>
@@ -51,35 +51,45 @@ export default {
       //   { value: 3, text: 'IKESAKI' },
       //   { value: 4, text: 'LOJAS REDE' },
       // ],
-      optionsLojas:[],
-      lojas:[],
-      sellouts:[]
+      optionsLojas: [],
+      lojas: [],
+      sellouts: []
     }
   },
   methods: {
     confirmaDia() {
       console.log('Confirma Dia', this.selected, this.dtcad)
+      let insSellout = { idpromoter: 1, idloja: this.selected, dtmov: this.dtcad }
+      const metodo = 'post'
+      this.$http[metodo](`/insertSellout`, insSellout)
+        .then(resp => {
+          if(resp){
+            this.obterSellouts()
+          }
+          //console.log(resp)
+        })
+
     },
     obterLojas() {
       this.$http.get('consulta?operacao=loja').then(res => {
         this.lojas = res.data
-        this.optionsLojas = this.lojas.map( el => ({value:el.id, text:el.nome}) )
+        this.optionsLojas = this.lojas.map(el => ({ value: el.id, text: el.nome }))
       })
     },
-    obterSellouts(){
+    obterSellouts() {
       this.$http.get('obterSellouts?idpromoter=1').then(res => {
         this.sellouts = res.data
-        console.log(this.sellouts)
+        //console.log(this.sellouts)
       })
     },
-    selloutitem(idsellout){
+    selloutitem(idsellout) {
       this.$router.push(`/SelloutItem/${idsellout}`)
     }
   },
   created() {
-        this.obterLojas()
-        this.obterSellouts()
-    },
+    this.obterLojas()
+    this.obterSellouts()
+  },
 
 }
 </script>
@@ -92,4 +102,5 @@ export default {
 
 /* #footer{
   margin-bottom: 0px;
-} */</style>
+} */
+</style>

@@ -11,7 +11,7 @@ Vue.use({
     install(Vue) {
         // Vue.prototype.$http = axios
         Vue.prototype.$http = axios.create({
-            baseURL: process.env.NODE_ENV == 'development' ? 'http://localhost:3000/' : 'http://35.184.93.99:3000/',
+            baseURL: process.env.NODE_ENV == 'development' ? 'http://localhost:3000/' : 'http://10.128.0.2:3000/',  //35.184.93.99 Externo
             //baseURL: 'http://localhost:3000/',
             headers: {
                 "Authorization": "abc123"
@@ -19,7 +19,8 @@ Vue.use({
         })
 
         Vue.prototype.$http.interceptors.request.use(config => {
-            console.log(config.method)
+            //console.log(config.method)
+            //console.log(this.$store.login)
             // if(config.method == 'post') {
             //     config.method = 'put'
             // }

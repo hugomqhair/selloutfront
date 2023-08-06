@@ -1,23 +1,30 @@
 <template>
   <div id="app">
     <Header></Header>
-    <b-container>
-      <router-view></router-view>
+    <Info></Info>
+    <b-container >
+      <Login v-if="!user"></Login>
+      <router-view v-if="user"></router-view>
     </b-container>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
+import Info from './components/Info.vue'
+import Login from './components/Login.vue'
 
 export default {
   name: 'App',
   components: {
-    // Body,
+    Login,
     Header,
-    Footer
+    Info
+  },
+  computed:{
+    user(){
+        return this.$store.state.user
+    }
   }
 }
 </script>
@@ -31,13 +38,13 @@ export default {
   background-color:#1f1f1f;
   font-family:Montserrat;
   
-  height: 100vh;
+  /* height: 100vh; */
+  min-height: 100vh;
   display: grid;
-  grid-template-rows: 17vh 1fr 10vh;
+  grid-template-rows: 17vh 1fr;
   grid-template-areas: 
       "header"
       "modelo"
-      "footer";
 }
 body {
   margin: 0;

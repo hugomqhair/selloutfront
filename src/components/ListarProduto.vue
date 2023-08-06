@@ -1,7 +1,10 @@
 <template>
     <div class="listarProduto">
+        <div class="mb-2">
+            <b-button class="mt-3" block variant="success" @click="salvarVenda">Salvar Dados</b-button>
+        </div>
         <b-list-group >
-            <b-list-group-item v-for="dado in dados" class="d-flex justify-content-between align-items-center" id="listarProduto" :key="dado.idproduto">
+            <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1" id="listarProduto" :key="dado.idproduto">
                 <div>
                     <b-avatar variant="success" icon="plus-square" class="mr-3" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
                     <b-avatar variant="danger" icon="file-minus"   class="mr-3" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
@@ -10,7 +13,6 @@
                 <b-badge variant="dark">{{ dado.qtdneg }}</b-badge>
             </b-list-group-item>
         </b-list-group>
-        <!-- <p v-for="dado in dados" :key="dado.idproduto"> {{ dado.idproduto }} - {{ dado.texto }}</p> -->
     </div>
 </template>
 
@@ -18,7 +20,7 @@
 export default {
     data() {
         return {
-            dados: [],
+            produtos: [],
             // {id:1, nome:'PRANCHA', qtdneg:0},
             // { id:2, nome:'SECADOR', qtdneg:0},
             // {id:3, nome:'MAQ CORTE', qtdneg:0},
@@ -37,30 +39,23 @@ export default {
     methods: {
         contar(id, val){
             //this.qtdneg += val
-            const item = this.dados.find(item => item.idproduto === id);
+            const item = this.produtos.find(item => item.idproduto === id);
             item.qtdneg += val;
         },
-        salvar() {
-            console.log('salvando...')
-            const metodo = this.id ? 'patch' : 'post'
-            this.$http[metodo](`/insert`, this.dado)
+        salvarVenda() {
+            let salvaItens = this.produtos.filter(val => val.qtdneg>0).map( produto => ({...produto, idsellout: this.selloutid }))
+            //console.log(salvaItens)
+            this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
-                    this.obterdados()
-                    this.dado.texto = ''
-                    console.log(resp)
+                    if(resp){
+                        this.obterdados()
+                    }
                 })
-            // .then(_ => {
-            // 	this.mensagens.push({
-            // 		texto: 'Operação realizada com sucesso!',
-            // 		tipo: 'success'
-            // 	})
-            // })
         },
         obterdados(idsellout) {
+            //console.log('Token', localStorage.getItem('MQToken'))
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
-                console.log('obterDados:', res)
-                this.dados = res.data
-                console.log(res.data)
+                this.produtos = res.data
             })
         },
     },
