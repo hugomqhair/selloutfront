@@ -11,7 +11,7 @@ Vue.use({
     install(Vue) {
         // Vue.prototype.$http = axios
         Vue.prototype.$http = axios.create({
-            baseURL: process.env.NODE_ENV == 'development' ? 'http://localhost:3000/' : 'http://127.0.0.1:3000/',  //35.184.93.99 Externo
+            baseURL: process.env.NODE_ENV == 'development' ? 'http://localhost:3000/' : 'http://35.184.93.99:3000/',  //35.184.93.99 Externo
             //baseURL: 'http://localhost:3000/',
             headers: {
                 "Authorization": "abc123"
