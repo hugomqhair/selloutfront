@@ -9,7 +9,9 @@
                     <b-avatar variant="success" icon="plus-square" class="mr-3" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
                     <b-avatar variant="danger" icon="file-minus"   class="mr-3" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
                 </div>
-                {{ dado.descrprod }} 
+                <div class="descrprod">
+                    {{ dado.descrprod }} 
+                </div>
                 <b-badge variant="dark">{{ dado.qtdneg }}</b-badge>
             </b-list-group-item>
         </b-list-group>
@@ -76,5 +78,12 @@ export default {
 
 #listarProduto{
     font-size: 1.2em;
+    white-space: nowrap; /* Impede a quebra de linha */
+}
+.descrprod{
+    white-space: nowrap; /* Impede a quebra de linha */
+    overflow: hidden; /* Esconde o conteúdo que não cabe */
+    text-overflow: ellipsis; /* Adiciona reticências (...) quando o texto estiver cortado */
+
 }
 </style>

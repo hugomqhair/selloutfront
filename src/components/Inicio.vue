@@ -2,7 +2,7 @@
   <div id="inicio">
     <div>
       <div>
-        <b-card title="Olá Fulano" sub-title="Iniciar dia">
+        <b-card sub-title="Iniciar dia">
           <div>
             <b-form-datepicker id="datepicker-valid" :state="true" v-model="dtcad" 
               placeholder="Selecionar data das vendas"></b-form-datepicker>
@@ -56,10 +56,15 @@ export default {
       sellouts: []
     }
   },
+  computed:{
+    login(){
+        return this.$store.state.login
+    }
+  },
   methods: {
     confirmaDia() {
-      console.log('Confirma Dia', this.selected, this.dtcad)
-      let insSellout = { idpromoter: 1, idloja: this.selected, dtmov: this.dtcad }
+      //console.log('Confirma Dia', this.selected, this.dtcad)
+      let insSellout = { idpromoter: this.login.id, idloja: this.selected, dtmov: this.dtcad }
       const metodo = 'post'
       this.$http[metodo](`/insertSellout`, insSellout)
         .then(resp => {
@@ -77,7 +82,7 @@ export default {
       })
     },
     obterSellouts() {
-      this.$http.get('obterSellouts?idpromoter=1').then(res => {
+      this.$http.get(`obterSellouts?idpromoter=${this.login.id}`).then(res => {
         this.sellouts = res.data
         //console.log(this.sellouts)
       })

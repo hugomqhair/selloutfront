@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         user: null,
-        login: {}
+        login: {},
+        mensagens:[]
 
     },
     getters: {
@@ -15,11 +16,13 @@ export default new Vuex.Store({
     },
     mutations: {
         setUser(state, login) {
-            console.log('Store:',login)
+            //console.log('Store:',login)
             state.login = login
             if (login) {
                 axios.defaults.headers.common['Authorization'] = `bearer ${login.token}`
                 this.state.user = login.usuario
+                this.state.mensagens = []
+                this.state.mensagens.push({ texto: "Logado com sucesso!!", tipo: 'success', tempo: 2, dismissCountDown: 0 })
             }
         }
     }

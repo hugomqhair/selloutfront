@@ -34,8 +34,13 @@ export default {
         logar() {
             this.$http.post(`/auth`, this.login)
                 .then(resp => {
-                   this.$store.commit('setUser',{usuario:this.login.usuario, token: resp.data.token })
+                    //console.log('resp', resp)
+                   this.$store.commit('setUser',{id:resp.data.id,usuario:resp.data.usuario, token: resp.data.token })
                    localStorage.setItem('MQToken', JSON.stringify(resp.data.token))
+                }).catch(err => {
+                    //console.log('Erro Login', err.response.data)
+                    //this.$store.commit('setUser',{id:null,usuario:null, token: null })
+                    this.$store.state.mensagens = [{ texto: err.response.data.err, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
                 })
         }
     }
