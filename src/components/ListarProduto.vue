@@ -3,13 +3,13 @@
         <div class="mb-2">
             <b-button class="mt-3" block variant="success" @click="salvarVenda">Salvar Dados</b-button>
         </div>
-        <b-list-group >
+        <b-list-group>
             <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1" id="listarProduto" :key="dado.idproduto">
                 <div>
                     <b-avatar variant="success" icon="plus-square" class="mr-3" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
                     <b-avatar variant="danger" icon="file-minus"   class="mr-3" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
                 </div>
-                <div class="descrprod">
+                <div class="flex-grow-1">
                     {{ dado.descrprod }} 
                 </div>
                 <b-badge variant="dark">{{ dado.qtdneg }}</b-badge>
@@ -45,8 +45,8 @@ export default {
             item.qtdneg += val;
         },
         salvarVenda() {
-            let salvaItens = this.produtos.filter(val => val.qtdneg>0).map( produto => ({...produto, idsellout: this.selloutid }))
-            //console.log(salvaItens)
+            let salvaItens = this.produtos.filter(val => val.qtdneg>0).map(obj => ({idproduto:obj.idproduto, qtdneg:obj.qtdneg})).map( produto => ({...produto, idsellout: this.selloutid }))
+            console.log(salvaItens)
             this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
                     if(resp){
@@ -77,13 +77,12 @@ export default {
 }
 
 #listarProduto{
-    font-size: 1.2em;
-    white-space: nowrap; /* Impede a quebra de linha */
+    font-size: 1em;
+    /* white-space: nowrap; Impede a quebra de linha */
 }
-.descrprod{
-    white-space: nowrap; /* Impede a quebra de linha */
-    overflow: hidden; /* Esconde o conteúdo que não cabe */
-    text-overflow: ellipsis; /* Adiciona reticências (...) quando o texto estiver cortado */
-
-}
+/* .descrprod{
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+} */
 </style>
