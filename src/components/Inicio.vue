@@ -64,12 +64,14 @@ export default {
   methods: {
     confirmaDia() {
       //console.log('Confirma Dia', this.selected, this.dtcad)
+      this.$store.state.loading = !this.$store.state.loading
       let insSellout = { idpromoter: this.login.id, idloja: this.selected, dtmov: this.dtcad }
       const metodo = 'post'
       this.$http[metodo](`/insertSellout`, insSellout)
         .then(resp => {
           if(resp){
             this.obterSellouts()
+            this.$store.state.loading = !this.$store.state.loading
           }
           //console.log(resp)
         })
@@ -88,6 +90,7 @@ export default {
       })
     },
     selloutitem(idsellout) {
+      this.$store.state.loading = !this.$store.state.loading
       this.$router.push(`/SelloutItem/${idsellout}`)
     }
   },

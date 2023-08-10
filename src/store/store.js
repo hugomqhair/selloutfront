@@ -8,7 +8,8 @@ export default new Vuex.Store({
     state: {
         user: null,
         login: {},
-        mensagens:[]
+        mensagens:[],
+        loading: false
 
     },
     getters: {

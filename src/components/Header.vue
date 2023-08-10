@@ -1,7 +1,10 @@
 <template>
     <header class="header">
-        <!-- <img src="./assets/logos_header.png" class="img-fluid rounded mx-auto d-block" alt=""> -->
-        <img src="../assets/logos_header.png" class="img-fluid rounded mx-auto d-block" alt="">
+        <div>
+            <router-link to="/">
+                <img src="../assets/logos_header.png" class="img-fluid rounded mx-auto d-block" alt="">
+            </router-link>
+        </div>
         <div class="alert">
             <b-alert dismissible v-for="mensagem in mensagens" :key="mensagem.texto" :show="mensagem.tempo"
                 :variant="mensagem.tipo" @dismissed="mensagem.tempo = 0">
@@ -12,14 +15,16 @@
 </template>
 
 <script>
+//import router from '@/router';
+
 export default {
     computed: {
         mensagens() {
-            console.log('msg', this.$store.state.mensagens)
-            return this.$store.state.mensagens
+            console.log('msg', this.$store.state.mensagens);
+            return this.$store.state.mensagens;
         },
-    }
-
+    },
+    //  components: { router }
 }
 </script>
 

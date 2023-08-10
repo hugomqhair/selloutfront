@@ -36,6 +36,7 @@ export default {
     },
     created() {
         this.obterdados(this.selloutid)
+        
         //console.log('idsellout', this.selloutid)
     },
     methods: {
@@ -45,19 +46,25 @@ export default {
             item.qtdneg += val;
         },
         salvarVenda() {
+            this.$store.state.loading = !this.$store.state.loading
             let salvaItens = this.produtos.filter(val => val.qtdneg>0).map(obj => ({idproduto:obj.idproduto, qtdneg:obj.qtdneg})).map( produto => ({...produto, idsellout: this.selloutid }))
             console.log(salvaItens)
             this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
                     if(resp){
-                        this.obterdados()
+                        console.log('salvou!!')
+                        this.obterdados(this.selloutid)
                     }
+                })
+                .catch(err => {
+                    console.log(err)
                 })
         },
         obterdados(idsellout) {
             //console.log('Token', localStorage.getItem('MQToken'))
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
                 this.produtos = res.data
+                this.$store.state.loading = false
             })
         },
     },

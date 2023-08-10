@@ -7,7 +7,7 @@
                 <span>Senha</span>
                 <b-form-input v-model="login.senha" name="senha" type="password"></b-form-input>
             </div>
-            <b-button variant="success" block class="mt-3" @click="logar">Entrar</b-button>
+            <b-button variant="success" block class="mt-3"  @click="logar">Entrar</b-button>
         </b-card>
     </div>
 </template>
@@ -22,25 +22,36 @@ export default {
         // Body,
 
     },
-    computed:{
-    user(){
-        return this.$store.state.user
+    data() {
+        return {
+        }
     },
-    login(){
-        return this.$store.state.login
-    }
-  },
+    computed: {
+        user() {
+            return this.$store.state.user
+        },
+        login() {
+            return this.$store.state.login
+        }
+    },
     methods: {
         logar() {
+            this.$store.state.loading = !this.$store.state.loading
             this.$http.post(`/auth`, this.login)
                 .then(resp => {
-                    //console.log('resp', resp)
-                   this.$store.commit('setUser',{id:resp.data.id,usuario:resp.data.usuario, token: resp.data.token })
-                   localStorage.setItem('MQToken', JSON.stringify(resp.data.token))
+                    console.log('resp', resp)
+                    this.$store.commit('setUser', { id: resp.data.id, usuario: resp.data.usuario, token: resp.data.token })
+                    localStorage.setItem('MQToken', JSON.stringify(resp.data.token))
+                    this.$store.state.loading = !this.$store.state.loading
                 }).catch(err => {
-                    //console.log('Erro Login', err.response.data)
+                    console.log('Erro Login', err)
+                    if (err.code == 'ERR_NETWORK') {
+                        this.$store.state.mensagens = [{ texto: 'Erro com o Servidor, informe o TI', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
+                        this.$store.state.loading = !this.$store.state.loading
+                    } else {
+                        this.$store.state.mensagens = [{ texto: err.response.data.err, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
+                    }
                     //this.$store.commit('setUser',{id:null,usuario:null, token: null })
-                    this.$store.state.mensagens = [{ texto: err.response.data.err, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
                 })
         }
     }
@@ -56,4 +67,5 @@ export default {
     /* align-items: center; */
     /* grid-area: modelo; */
 }
+
 </style>
