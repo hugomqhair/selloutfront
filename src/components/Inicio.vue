@@ -20,13 +20,17 @@
         </b-card>
         <p>Valor da Data: {{ dtcad }}</p>
 
-        <b-card-group columns>
+        <b-card-group class="justify-content-between align-items-center mt-1" columns>
           <b-card v-for="sellout in sellouts" :key="sellout.id" border-variant="light" :header="sellout.fmt_dtmov"
-            header-bg-variant="dark" header-text-variant="success" align="center">
+            header-bg-variant="dark" header-text-variant="success"  align="center">
             <b-card-text>
+              <h4>
+                <b-badge :variant="sellout.qtdneg =='0' ? 'dark' : 'success'" id="qtdneg">{{ sellout.qtdneg }}</b-badge>
+              </h4>
+
               {{ sellout.loja }}
               <b-avatar variant="success" icon="box-arrow-in-up-right" class="ml-3" button
-                @click="selloutitem(sellout.id)"></b-avatar>
+                @click="selloutitem(sellout.id, sellout.loja,sellout.fmt_dtmov )"></b-avatar>
             </b-card-text>
           </b-card>
         </b-card-group>
@@ -73,7 +77,6 @@ export default {
             this.obterSellouts()
             this.$store.state.loading = !this.$store.state.loading
           }
-          //console.log(resp)
         })
 
     },
@@ -86,29 +89,31 @@ export default {
     obterSellouts() {
       this.$http.get(`obterSellouts?idpromoter=${this.login.id}`).then(res => {
         this.sellouts = res.data
-        //console.log(this.sellouts)
+        console.log(this.sellouts)
       })
     },
-    selloutitem(idsellout) {
+    selloutitem(idsellout, loja, data_selected) {
       this.$store.state.loading = !this.$store.state.loading
       this.$router.push(`/SelloutItem/${idsellout}`)
+      console.log(loja, data_selected)
+      this.$store.state.selectLoja = loja
+      this.$store.state.selectData = data_selected
     }
   },
   created() {
     this.obterLojas()
     this.obterSellouts()
+    this.$store.state.loading = false
   },
+  
 
 }
 </script>
 
 <style>
-/* #inicio {
-  background-color: azure;
-
-} */
-
-/* #footer{
-  margin-bottom: 0px;
-} */
+#qtdneg{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
 </style>

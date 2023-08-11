@@ -9,8 +9,9 @@ export default new Vuex.Store({
         user: null,
         login: {},
         mensagens:[],
-        loading: false
-
+        loading: false,
+        selectLoja:'',
+        selectData:''
     },
     getters: {
 

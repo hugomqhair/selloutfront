@@ -5,14 +5,14 @@
         </div>
         <b-list-group>
             <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1" id="listarProduto" :key="dado.idproduto">
-                <div>
-                    <b-avatar variant="success" icon="plus-square" class="mr-3" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
-                    <b-avatar variant="danger" icon="file-minus"   class="mr-3" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
-                </div>
+                <b-avatar variant="success" icon="plus-square" class="m-1" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
+                <b-avatar variant="danger" icon="file-minus"   class="m-1" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
                 <div class="flex-grow-1">
                     {{ dado.descrprod }} 
                 </div>
-                <b-badge variant="dark">{{ dado.qtdneg }}</b-badge>
+                <h3>
+                    <b-badge :variant="dado.qtdneg =='0' ? 'dark' : 'success'" id="qtdneg">{{ dado.qtdneg }}</b-badge>
+                </h3>
             </b-list-group-item>
         </b-list-group>
     </div>
@@ -31,7 +31,8 @@ export default {
             // {id:6, nome:'MODELADOR CURLING', qtdneg:0},
             // {id:7, nome:'PRANCHA SLIM', qtdneg:0},
             id: null,
-            selloutid : this.$route.params.id
+            selloutid : this.$route.params.id,
+            
         }
     },
     created() {
@@ -52,7 +53,7 @@ export default {
             this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
                     if(resp){
-                        console.log('salvou!!')
+                        this.$store.state.mensagens = [{ texto: 'Sellout do dia gravado!!! ', tipo: 'success', tempo: 2, dismissCountDown: 0 }]
                         this.obterdados(this.selloutid)
                     }
                 })
@@ -87,6 +88,18 @@ export default {
     font-size: 1em;
     /* white-space: nowrap; Impede a quebra de linha */
 }
+
+#qtdneg{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+/* #buttons{
+    height: 25px;
+    width: 25px;
+} */
+
 /* .descrprod{
     white-space: nowrap; 
     overflow: hidden;

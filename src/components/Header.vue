@@ -2,7 +2,9 @@
     <header class="header">
         <div>
             <router-link to="/">
-                <img src="../assets/logos_header.png" class="img-fluid rounded mx-auto d-block" alt="">
+                <img src="../assets/MQlogos_header.png" class="img-fluid rounded mx-left d-block" id="imgheader" left alt="">
+                <!-- <img src="../assets/logos_header.png" class="img-fluid rounded mx-left d-block" id="imgheader" left alt=""> -->
+                <!-- class="img-fluid rounded mx-auto d-block"  id="imgheader" -->
             </router-link>
         </div>
         <div class="alert">
@@ -34,16 +36,23 @@ export default {
     grid-area: header;
     margin-top: 0px;
     max-height: 10px;
+    padding: 10px;
 }
 
 img {
-    max-height: 100px;
+    max-height: 80px;
 }
 
 .alert {
     position: absolute;
-    top: 10px;
-    left: 8px;
-    padding: 20px;
+    top: 30px;
+    right: 15%;
+    width: 300px;
+    /* padding: 200px; */
+}
+
+
+@media (max-width: 800px) {
+
 }
 </style>

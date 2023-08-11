@@ -65,6 +65,11 @@ body {
     right: 50%;
     opacity: 0.8;
 
+ @media (max-width: 800px) {
+  right: 40%;
+  top: 30%;
+}
+
     /* padding: 10px; */
 }
 /* #footer{
