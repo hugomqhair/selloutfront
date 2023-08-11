@@ -6,9 +6,8 @@
       <span class="mr-auto">{{ user }}</span>
     </b-list-group-item>
     <div v-if="selectData!=''" class="d-flex align-items-right">
-      <b-badge variant="light" class="ml-2">{{ selectLoja }}</b-badge>
+      <b-badge variant="light" class="mr-2">{{ selectLoja }}</b-badge>
       <b-badge variant="secondary">{{ selectData }}</b-badge>
-        <!-- <span>[{{ selectLoja }} - {{selectData  }}]</span> -->
     </div>
   </div>
 </template>

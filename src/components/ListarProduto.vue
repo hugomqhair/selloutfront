@@ -5,6 +5,7 @@
         </div>
         <b-list-group>
             <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1" id="listarProduto" :key="dado.idproduto">
+                <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo -1]" id="descrGrupo">{{ dado.grupo }}</b-badge>
                 <b-avatar variant="success" icon="plus-square" class="m-1" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
                 <b-avatar variant="danger" icon="file-minus"   class="m-1" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
                 <div class="flex-grow-1">
@@ -32,7 +33,7 @@ export default {
             // {id:7, nome:'PRANCHA SLIM', qtdneg:0},
             id: null,
             selloutid : this.$route.params.id,
-            
+            cores:['primary','success', 'danger', 'warning', 'info','light','dark','secondary']
         }
     },
     created() {
@@ -66,6 +67,7 @@ export default {
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
                 this.produtos = res.data
                 this.$store.state.loading = false
+                console.log(this.produtos)
             })
         },
     },
@@ -94,7 +96,12 @@ export default {
     top: 5px;
     right: 5px;
 }
-
+#descrGrupo {
+    position: absolute;
+    top: 1px;
+    left: 40%;
+    font-size: 0.6em;
+}
 /* #buttons{
     height: 25px;
     width: 25px;
