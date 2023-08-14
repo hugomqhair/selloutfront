@@ -7,7 +7,7 @@
             <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1" id="listarProduto" :key="dado.idproduto">
                 <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo -1]" id="descrGrupo">{{ dado.grupo }}</b-badge>
                 <b-avatar variant="success" icon="plus-square" class="m-1" button :key="dado.idproduto" @click="contar(dado.idproduto,1)"></b-avatar>
-                <b-avatar variant="danger" icon="file-minus"   class="m-1" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar>
+                <!-- <b-avatar variant="danger" icon="file-minus"   class="m-1" button :key="`${dado.idproduto}-menos`"  @click="contar(dado.idproduto,-1)"></b-avatar> -->
                 <div class="flex-grow-1">
                     {{ dado.descrprod }} 
                 </div>
@@ -50,7 +50,7 @@ export default {
         salvarVenda() {
             this.$store.state.loading = !this.$store.state.loading
             let salvaItens = this.produtos.filter(val => val.qtdneg>0).map(obj => ({idproduto:obj.idproduto, qtdneg:obj.qtdneg})).map( produto => ({...produto, idsellout: this.selloutid }))
-            console.log(salvaItens)
+            //console.log(salvaItens)
             this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
                     if(resp){
@@ -67,7 +67,7 @@ export default {
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
                 this.produtos = res.data
                 this.$store.state.loading = false
-                console.log(this.produtos)
+               //console.log(this.produtos)
             })
         },
     },

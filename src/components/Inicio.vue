@@ -73,29 +73,41 @@ export default {
       const metodo = 'post'
       this.$http[metodo](`/insertSellout`, insSellout)
         .then(resp => {
+          console.log(resp)
           if(resp){
             this.obterSellouts()
             this.$store.state.loading = !this.$store.state.loading
           }
+        }).catch(err => {
+          this.$store.state.mensagens = [{ texto: 'Falha de Servidor (confirmaDia), informar ao TI \n'+err.response.data, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]  
+          this.$store.state.loading = false
         })
 
     },
     obterLojas() {
-      this.$http.get('consulta?operacao=loja').then(res => {
+      this.$http.get(`consulta?operacao=loja&user=${this.login.id}`).then(res => {
         this.lojas = res.data
         this.optionsLojas = this.lojas.map(el => ({ value: el.id, text: el.nome }))
+      })
+      .catch(err => {
+        console.log('ERRO ***', err)
+        this.$store.state.mensagens = [{ texto: 'Falha de Servidor (obterLojas), informar ao TI', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
       })
     },
     obterSellouts() {
       this.$http.get(`obterSellouts?idpromoter=${this.login.id}`).then(res => {
         this.sellouts = res.data
-        console.log(this.sellouts)
+        //console.log(this.sellouts)
+      }).catch(err => {
+        console.log(err)
+        this.$store.state.mensagens = [{ texto: 'Falha de Servidor(obterSellouts), informar ao TI', tipo: 'danger', tempo: 0, dismissCountDown: 0 }]
+
       })
     },
     selloutitem(idsellout, loja, data_selected) {
       this.$store.state.loading = !this.$store.state.loading
       this.$router.push(`/SelloutItem/${idsellout}`)
-      console.log(loja, data_selected)
+      //console.log(loja, data_selected)
       this.$store.state.selectLoja = loja
       this.$store.state.selectData = data_selected
     }
