@@ -36,7 +36,7 @@ export default {
     grid-area: header;
     margin-top: 0px;
     max-height: 10px;
-    padding: 10px;
+    padding: 5px 10px;
 }
 
 img {
@@ -45,10 +45,12 @@ img {
 
 .alert {
     position: absolute;
-    top: 30px;
-    right: 15%;
-    width: 300px;
-    /* padding: 200px; */
+    display: block;
+    z-index: 1;
+    bottom: 5px;
+    /* right: 15%; */
+    /* width: 300px; */
+    min-width: 350px;
 }
 
 

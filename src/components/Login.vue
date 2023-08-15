@@ -60,6 +60,7 @@ export default {
 
 <style>
 #login {
+    position: relative;
     color: antiquewhite;
     /* height: 100%; */
     /* display: flex; */

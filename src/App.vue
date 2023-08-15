@@ -45,11 +45,11 @@ export default {
 #app {
   background-color: #1f1f1f;
   font-family: Montserrat;
-
+  
   /* height: 100vh; */
   min-height: 100vh;
   display: grid;
-  grid-template-rows: 17vh 1fr;
+  grid-template-rows: 10vh 1fr;
   grid-template-areas:
     "header"
     "modelo"
