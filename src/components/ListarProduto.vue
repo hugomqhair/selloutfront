@@ -97,8 +97,9 @@ export default {
         salvarVenda() {
             this.$store.state.loading = !this.$store.state.loading
             let salvaItens = this.produtos.filter(val => val.qtdneg > 0).map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
+            let faltas = this.listaFaltas.map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
             //console.log(salvaItens)
-            this.$http.post(`/insertSelloutItem`, salvaItens)
+            this.$http.post(`/insertSelloutItem`, [salvaItens,faltas])
                 .then(resp => {
                     if (resp) {
                         this.$store.state.mensagens = [{ texto: 'Sellout do dia gravado!!! ', tipo: 'success', tempo: 2, dismissCountDown: 0 }]
@@ -188,7 +189,7 @@ export default {
     /* max-width: 300px; */
 }
 
-@media (max-width: 600px) {
+@media (max-width: 400px) {
     #dadossellout{
         visibility: hidden;
     }
