@@ -1,49 +1,61 @@
 <template>
     <div class="listarProduto">
-        <div class="mb-2 sticky-top align-items-center" id="salvarDados">
+        <div class="mb-2 sticky-top" id="salvarDados">
 
             <b-list-group-item class="d-flex justify-content-between align-items-center" id="avatar">
-                <b-avatar v-if="selectData != ''" variant="warning" class="mr-2" icon="arrow-left-square" @click="home"
-                    button></b-avatar>
-                <b-button class="mt-3" variant="success" @click="salvarVenda">Salvar Dados</b-button>
-                <div v-if="selectData != ''" id="dadossellout">
-                    <b-row>
-                        <b-badge variant="light" class="mr-2">{{ selectLoja }}</b-badge>
-                    </b-row>
-                    <b-row>
-                        <b-badge variant="secondary">{{ selectData }}</b-badge>
-                    </b-row>
-                </div>
+
+                <b-col cols="2"><b-avatar v-if="selectData != ''" variant="warning" class="mr-2" icon="arrow-left-square" @click="home"
+                    button></b-avatar></b-col>
+
+                <b-col cols="5"><b-button class="mt-3" variant="success" @click="salvarVenda">Salvar Dados</b-button></b-col>
+                <b-col cols="5">
+                    <div v-if="selectData != ''" id="dadossellout" class="d-block w-100 justify-content-between">
+                        <b-row>
+                            <b-badge variant="light">{{ selectLoja.length>20 ? selectLoja.substring(0,20)+'...' : selectLoja }}</b-badge>
+                            <b-badge variant="secondary">{{ selectData }}</b-badge>
+                        </b-row>
+                        
+                        
+                    </div>
+                </b-col>
 
             </b-list-group-item>
         </div>
+        <!-- <transition-group name="slide"> -->
+            <b-list-group>
+                <b-list-group-item v-for="dado in produtos"  class="d-flex justify-content-between align-items-center mt-1"
+                    id="listarProduto" :key="dado.idproduto">
+                        <!-- Grupos -->
+                        <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
+                        }}</b-badge>
+                        <!-- Botão Somar -->
+                        <b-avatar variant="success" icon="plus-square" class="m-1" id="somarItem" button :key="dado.idproduto"
+                            @click="contar(dado.idproduto, 1)"></b-avatar>
+                        <!-- Descrição do Produto -->
+                        <div class="flex-grow-1 align-items-center ml-4">
+                            {{ dado.descrprod }}
+                        </div>
+                        <!-- Contador de quantidade -->
+                        <h4>
+                            <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg">{{ dado.qtdneg }}</b-badge>
+                        </h4>
+                        <!-- Botão não tem na loja -->
+                        <h6>
+                            <b-avatar button :variant="dado.semestoque ? 'primary' : 'danger'" aria-hidden="true" id="ruptura" :icon="dado.semestoque ?'cart-plus-fill' : 'cart-x'" size="1.5rem" @click="semEstoque(dado.idproduto, !dado.semestoque)"></b-avatar> 
+                            <b-avatar button variant="secondary" id="semCadastro" icon="x-circle" size="1.5rem" @click="semCadastro(dado.idproduto, !dado.semcadastro)"></b-avatar>
+                        </h6>
+                </b-list-group-item>
+            </b-list-group>
+        <!-- </transition-group> -->
+
+        <!-- item não existe na loja -->
+        <hr> 
         <b-list-group>
-            <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1"
-                id="listarProduto" :key="dado.idproduto">
-                <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
-                }}</b-badge>
-                <b-avatar variant="success" icon="plus-square" class="m-2" id="somarItem" button :key="dado.idproduto"
-                    @click="contar(dado.idproduto, 1)"></b-avatar>
-                <div class="flex-grow-1 align-items-center">
-                    {{ dado.descrprod }}
-                </div>
-                <h4>
-                    <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg">{{ dado.qtdneg }}</b-badge>
-                </h4>
-                <!-- <b-avatar variant="danger" class="mr-2" icon="cart-x"></b-avatar> -->
-                <h6>
-                    <!-- <b-avatar variant="danger" id="faltaEstoque" icon="emoji-frown"></b-avatar> -->
-                    <b-avatar button variant="danger" id="faltaEstoque" icon="emoji-frown" size="1.5rem" @click="faltaEstoque(dado.idproduto, -1)"></b-avatar>
-                </h6>
-            </b-list-group-item>
-        </b-list-group>
-        <hr>
-        <b-list-group>
-            <b-list-group-item v-for="falta in listaFaltas" class="d-flex justify-content-between align-items-center mt-1" :key="falta.idproduto">
+            <b-list-group-item v-for="falta in semcadastro" variant="secondary" class="d-flex justify-content-between align-items-center mt-1" :key="falta.idproduto">
                 <div class="flex-grow-1 align-items-center">
                     {{ falta.descrprod }}
                 </div>
-                <b-avatar button variant="success" id="faltaEstoque" icon="emoji-smile" size="1.5rem" @click="faltaEstoque(dado.idproduto, -1)"></b-avatar>
+                <b-avatar button variant="success" id="definir" icon="emoji-smile" size="1.5rem"></b-avatar>
             </b-list-group-item>
         </b-list-group>
     </div>
@@ -54,14 +66,7 @@ export default {
     data() {
         return {
             produtos: [],
-            // {id:1, nome:'PRANCHA', qtdneg:0},
-            // { id:2, nome:'SECADOR', qtdneg:0},
-            // {id:3, nome:'MAQ CORTE', qtdneg:0},
-            // {id:4, nome:'ESC 001.01', qtdneg:0},
-            // {id:5, nome:'ESC 002.01', qtdneg:0},
-            // {id:6, nome:'MODELADOR CURLING', qtdneg:0},
-            // {id:7, nome:'PRANCHA SLIM', qtdneg:0},
-            listaFaltas:[],
+            semcadastro:[],
             id: null,
             selloutid: this.$route.params.id,
             cores: ['primary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'secondary']
@@ -69,13 +74,11 @@ export default {
     },
     created() {
         this.obterdados(this.selloutid)
-
-        //console.log('idsellout', this.selloutid)
     },
     computed: {
-        user() {
-            return this.$store.state.user
-        },
+        // user() {
+        //     return this.$store.state.user
+        // },
         selectLoja() {
             return this.$store.state.selectLoja
         },
@@ -94,12 +97,30 @@ export default {
             const item = this.produtos.find(item => item.idproduto === id);
             item.qtdneg += val;
         },
+        semEstoque(id, val) {
+            // console.log(id, val)
+            const item = this.produtos.find(item => item.idproduto === id);
+            item.semestoque = val;
+        },
+        semCadastro(id,val){
+            //console.log(id, val)
+            const item = this.produtos.find(item => item.idproduto === id);
+            item.semcadastro = val;
+            this.semcadastro.push(this.produtos.filter( val => val.idproduto === id)[0])
+            this.produtos = this.produtos.filter(val => val.idproduto != id)
+            // console.log(this.produtos)
+            // console.log(this.semcadastro)
+        },
         salvarVenda() {
             this.$store.state.loading = !this.$store.state.loading
-            let salvaItens = this.produtos.filter(val => val.qtdneg > 0).map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
-            let faltas = this.listaFaltas.map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
+            //console.log(this.produtos, this.semcadastro)
+            this.produtos = this.produtos.concat(this.semcadastro)
+            let salvaItens = this.produtos.filter(val => val.qtdneg > 0 || val.semestoque || val.semcadastro)
+                                            .map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro:obj.semcadastro, semestoque:obj.semestoque  }))
+                                            .map(produto => ({ ...produto, idsellout: this.selloutid }))
+            //let faltas = this.listaFaltas.map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
             //console.log(salvaItens)
-            this.$http.post(`/insertSelloutItem`, [salvaItens,faltas])
+            this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
                     if (resp) {
                         this.$store.state.mensagens = [{ texto: 'Sellout do dia gravado!!! ', tipo: 'success', tempo: 2, dismissCountDown: 0 }]
@@ -113,18 +134,14 @@ export default {
         obterdados(idsellout) {
             //console.log('Token', localStorage.getItem('MQToken'))
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
-                this.produtos = res.data
+                console.log(res.data)
+                this.produtos = res.data.filter(item => item.semcadastro==false)
+                this.semcadastro = res.data.filter(item => item.semcadastro==true)
                 this.$store.state.loading = false
                 //console.log(this.produtos)
             })
         },
-        faltaEstoque(id){
-            // console.log('faltaEstoque)', id, qtdneg)
-            // let temp = this.produtos.filter( val => val.idproduto === id)
-            this.listaFaltas.push(this.produtos.filter( val => val.idproduto === id)[0])
-            this.produtos = this.produtos.filter(val => val.idproduto != id)
-            //console.log(this.listaFaltas)
-        }
+
     },
 
 }
@@ -154,16 +171,25 @@ export default {
     right: 5px;
 }
 
-#faltaEstoque{
+#semCadastro{
     position: absolute;
     bottom: 5px;
     right: 5px;
     /* height: 20%; */
 }
+#ruptura{
+    position: absolute;
+    bottom: 5px;
+    right: 3em;
+    margin-right: 5px;
+    /* height: 20%; */ 
+}
 
 #somarItem{
     /* position: absolute; */
-    left: 2px;
+    /* margin-left: 20px; */
+    left: 20px;
+    top: 1px;
     /* height: 20%; */
 
 }
@@ -193,5 +219,28 @@ export default {
     #dadossellout{
         visibility: hidden;
     }
+
+    
+.fade-enter, .fade-leave-to {
+    opacity: 0;    
+}
+.fade-enter-active, .fade-leave-active{
+    transition: opacity 2s;
+}
+
+.slide-enter-active{
+    animation: slide-in 2s ease;
+    transition: opacity 2s;
+}
+
+.slide-leave-active{
+    animation: slide-ou 2s ease;
+    transition: opacity 2s;
+}
+
+.slide-enter, .slide.leave-to {
+    opacity: 0;
+}
+
 }
 </style>

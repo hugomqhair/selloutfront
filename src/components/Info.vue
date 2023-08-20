@@ -1,8 +1,8 @@
 <template>
   <div id="info">
     <b-list-group-item class="d-flex align-items-center" id="avatar">
-      <b-avatar variant="success" class="mr-3" @click="login" button></b-avatar>
-      <span class="mr-auto">{{ user }}</span>
+      <b-avatar variant="success" class="mr-3" @click="logout" button></b-avatar>
+      <span class="mr-auto">{{ login.usuario }}</span>
     </b-list-group-item>
   </div>
 </template>
@@ -19,15 +19,16 @@ export default {
 
   },
   computed: {
-    user() {
-      return this.$store.state.user
+    login() {
+      return this.$store.state.login
     },
 
 
   },
   methods: {
-    login() {
-      this.$store.state.user = !this.user ? 'Hugo FQ' : null
+    logout() {
+      this.$store.state.login = {}
+      this.$router.push('/Login')
     },
 
   },
@@ -38,9 +39,9 @@ export default {
 <style>
 #info {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 10px;
+  top: 5px;
+  right: 5px;
+  padding: 0px;
   color: aliceblue;
   /* border: 1px solid #ccc;  */
 }

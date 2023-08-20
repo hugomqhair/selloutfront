@@ -3,9 +3,9 @@
         <b-card title="Login" bg-variant="dark">
             <div>
                 <span>Usuário</span>
-                <b-form-input v-model="login.usuario" name="usuario" type="text"></b-form-input>
+                <b-form-input v-model="usuario" name="usuario" type="text"></b-form-input>
                 <span>Senha</span>
-                <b-form-input v-model="login.senha" name="senha" type="password"></b-form-input>
+                <b-form-input v-model="senha" name="senha" type="password"></b-form-input>
             </div>
             <b-button variant="success" block class="mt-3"  @click="logar">Entrar</b-button>
         </b-card>
@@ -24,12 +24,14 @@ export default {
     },
     data() {
         return {
+            usuario:'',
+            senha:''
         }
     },
     computed: {
-        user() {
-            return this.$store.state.user
-        },
+        // user() {
+        //     return this.$store.state.user
+        // },
         login() {
             return this.$store.state.login
         }
@@ -37,11 +39,12 @@ export default {
     methods: {
         logar() {
             this.$store.state.loading = !this.$store.state.loading
-            this.$http.post(`/auth`, this.login)
+            this.$http.post(`/auth`, {usuario:this.usuario, senha:this.senha})
                 .then(resp => {
-                    console.log('resp', resp)
+                    //console.log('resp', resp)
                     this.$store.commit('setUser', { id: resp.data.id, usuario: resp.data.usuario, token: resp.data.token })
                     localStorage.setItem('MQToken', JSON.stringify(resp.data.token))
+                    this.$router.push('/')
                     this.$store.state.loading = !this.$store.state.loading
                 }).catch(err => {
                     console.log('Erro Login', err)

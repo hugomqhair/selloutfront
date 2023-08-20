@@ -22,7 +22,6 @@
 export default {
     computed: {
         mensagens() {
-            console.log('msg', this.$store.state.mensagens);
             return this.$store.state.mensagens;
         },
     },
@@ -44,7 +43,7 @@ img {
 }
 
 .alert {
-    position: absolute;
+    position: fixed;
     display: block;
     z-index: 1;
     bottom: 5px;

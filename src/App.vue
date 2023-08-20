@@ -3,8 +3,7 @@
     <Header></Header>
     <Info></Info>
     <b-container>
-      <Login v-if="!user"></Login>
-      <router-view v-if="user"></router-view>
+      <router-view></router-view>
     </b-container>
     <!-- Snipper -->
     <div v-if="loading" id="loading">
@@ -16,19 +15,19 @@
 <script>
 import Header from './components/Header.vue'
 import Info from './components/Info.vue'
-import Login from './components/Login.vue'
+// import Login from './components/Login.vue'
 
 export default {
   name: 'App',
   components: {
-    Login,
+    // Login,
     Header,
     Info
   },
   computed: {
-    user() {
-      return this.$store.state.user
-    },
+    // user() {
+    //   return this.$store.state.user
+    // },
     loading() {
       return this.$store.state.loading
     }
@@ -49,7 +48,7 @@ export default {
   /* height: 100vh; */
   min-height: 100vh;
   display: grid;
-  grid-template-rows: 10vh 1fr;
+  grid-template-rows: 12vh 1fr;
   grid-template-areas:
     "header"
     "modelo"

@@ -49,12 +49,6 @@ export default {
     return {
       dtcad: '',
       selected: null,
-      // options: [
-      //   { value: 1, text: 'SUMIRE' },
-      //   { value: 2, text: 'GOYA' },
-      //   { value: 3, text: 'IKESAKI' },
-      //   { value: 4, text: 'LOJAS REDE' },
-      // ],
       optionsLojas: [],
       lojas: [],
       sellouts: []
@@ -68,23 +62,28 @@ export default {
   methods: {
     confirmaDia() {
       //console.log('Confirma Dia', this.selected, this.dtcad)
-      this.$store.state.loading = !this.$store.state.loading
-      let insSellout = { idpromoter: this.login.id, idloja: this.selected, dtmov: this.dtcad }
-      const metodo = 'post'
-      this.$http[metodo](`/insertSellout`, insSellout)
-        .then(resp => {
-          console.log(resp)
-          if(resp){
-            this.obterSellouts()
-            this.$store.state.loading = !this.$store.state.loading
-          }
-        }).catch(err => {
-          this.$store.state.mensagens = [{ texto: 'Falha de Servidor (confirmaDia), informar ao TI \n'+err.response.data, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]  
-          this.$store.state.loading = false
-        })
+      if(this.selected===null || this.dtcad===''){
+        this.$store.state.mensagens = [{ texto: 'Informe os campos Data e Loja!!', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]          
+      } else {
+        this.$store.state.loading = !this.$store.state.loading
+        let insSellout = { idpromoter: this.login.id, idloja: this.selected, dtmov: this.dtcad }
+        const metodo = 'post'
+        this.$http[metodo](`/insertSellout`, insSellout)
+          .then(resp => {
+            //console.log(resp)
+            if(resp){
+              this.obterSellouts()
+              this.$store.state.loading = !this.$store.state.loading
+            }
+          }).catch(err => {
+            this.$store.state.mensagens = [{ texto: 'Falha de Servidor (confirmaDia), informar ao TI \n'+err.response.data, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]  
+            this.$store.state.loading = false
+          })
+      }
 
     },
     obterLojas() {
+      //console.log('this.login',this.login)
       this.$http.get(`consulta?operacao=loja&user=${this.login.id}`).then(res => {
         this.lojas = res.data
         this.optionsLojas = this.lojas.map(el => ({ value: el.id, text: el.nome }))
@@ -113,9 +112,15 @@ export default {
     }
   },
   created() {
-    this.obterLojas()
-    this.obterSellouts()
-    this.$store.state.loading = false
+    console.log('inicio',this.$store.state.login)
+    if(this.$store.state.login){
+      this.obterLojas()
+      this.obterSellouts()
+      this.$store.state.loading = false
+
+    }else{
+      this.$router.push(`/Login`)
+    }
   },
   
 
