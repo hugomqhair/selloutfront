@@ -47,7 +47,10 @@ export default {
   
   /* height: 100vh; */
   min-height: 100vh;
+  min-width: 100vw;
   display: grid;
+
+  
   grid-template-rows: 12vh 1fr;
   grid-template-areas:
     "header"

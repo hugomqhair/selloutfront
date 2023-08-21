@@ -112,14 +112,13 @@ export default {
     }
   },
   created() {
-    console.log('inicio',this.$store.state.login)
-    if(this.$store.state.login){
+    //console.log('inicio',this.$store.state.login.token)
+    if(!this.$store.state.login.token){
+      this.$router.push(`/Login`)
+    }else{
       this.obterLojas()
       this.obterSellouts()
       this.$store.state.loading = false
-
-    }else{
-      this.$router.push(`/Login`)
     }
   },
   
