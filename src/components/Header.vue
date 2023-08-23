@@ -3,10 +3,10 @@
         <div>
             <router-link to="/">
                 <img src="../assets/MQlogos_header.png" class="img-fluid rounded mx-left d-block" id="imgheader" left alt="">
-                <!-- <img src="../assets/logos_header.png" class="img-fluid rounded mx-left d-block" id="imgheader" left alt=""> -->
-                <!-- class="img-fluid rounded mx-auto d-block"  id="imgheader" -->
             </router-link>
         </div>
+
+
         <div class="alert">
             <b-alert dismissible v-for="mensagem in mensagens" :key="mensagem.texto" :show="mensagem.tempo"
                 :variant="mensagem.tipo" @dismissed="mensagem.tempo = 0">

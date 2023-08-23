@@ -7,7 +7,7 @@
     </b-container>
     <!-- Snipper -->
     <div v-if="loading" id="loading">
-      <b-spinner style="width: 10rem; height: 10rem;" label="Large Spinner" variant="secondary"></b-spinner>
+      <b-spinner style="width: 10rem; height: 10rem;" label="Large Spinner" variant="success"></b-spinner>
     </div>
   </div>
 </template>
@@ -15,12 +15,11 @@
 <script>
 import Header from './components/Header.vue'
 import Info from './components/Info.vue'
-// import Login from './components/Login.vue'
+
 
 export default {
   name: 'App',
   components: {
-    // Login,
     Header,
     Info
   },

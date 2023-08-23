@@ -2,7 +2,7 @@
     <div class="listarProduto">
         <div class="mb-2 sticky-top" id="salvarDados">
 
-            <b-list-group-item class="justify-content-between align-items-center" id="avatar">
+            <b-list-group-item class="justify-content-between align-items-center" id="stickybox">
                 <b-row>
                     <b-col cols="2"><b-avatar v-if="selectData != ''" variant="warning" class="" icon="arrow-left-square"
                             @click="home" button></b-avatar></b-col>
@@ -180,6 +180,11 @@ export default {
     /* white-space: nowrap; Impede a quebra de linha */
 }
 
+
+#stickybox{
+    background-color: #1f1f1f;
+}
+
 #qtdneg {
     position: absolute;
     top: 5px;
@@ -231,7 +236,7 @@ export default {
     /* max-width: 300px; */
 }
 
-@media (max-width: 400px) {
+@media (max-width: 340px) {
     #dadossellout {
         visibility: hidden;
     }
