@@ -1,19 +1,21 @@
 <template>
     <div class="resultadoMensal">
-        <h1>Olá, Fuluno</h1>
         <h6>Objetivo Mensal {{ objetivo }}, considerando {{ diasmes }} dias</h6>
 
         <b-card-group class="justify-content-between align-items-center mt-1" columns>
             <b-card v-for="mes in mensal" :key="mes.mes" border-variant="light" :header="mes.mes" header-bg-variant="dark"
                 header-text-variant="success" align="center">
                 <b-card-text>
-                    <h4>
-                        <b-badge :variant="mes.venda == '0' ? 'dark' : 'success'" id="qtdneg">{{ mes.venda }}</b-badge>
-                    </h4>
-                    <span id="qtdnegdias"> {{ mes.percperiodo }}% do objetivo </span>
+                    <!-- <h4>
+                        <b-badge :variant="mes.venda == '0' ? 'dark' : 'success'" id="qtdneg">{{ mes.qtdneg }}</b-badge>
+                    </h4> -->
+                    <b-badge :variant="mes.cor" class="mb-2" >{{ mes.percperiodo }}% média diaria</b-badge>
+                    <div class="mt-2">
+                        <span class="texto">% Objetivo Mensal</span>
+                    </div>
                     <b-progress striped height="2rem" :value="(mes.qtdneg / objetivo) * 100" max="100" show-progress
                         class="mb-2" :variant="mes.cor"></b-progress>
-                    <span id="qtdnegdias">{{ mes.qtdneg }} vendas em {{ mes.dias }} dias</span>
+                    <span id="qtdnegdias" class="texto">{{ mes.qtdneg }} vendas em {{ mes.dias }} dias</span>
 
                 </b-card-text>
             </b-card>
@@ -95,7 +97,7 @@ export default {
     color: antiquewhite;
 }
 
-#qtdnegdias {
+span.texto{
     color: black;
     font-size: small;
 }
