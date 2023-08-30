@@ -49,7 +49,7 @@ img {
     bottom: 5px;
     /* right: 15%; */
     /* width: 300px; */
-    min-width: 350px;
+    min-width: 330px;
 }
 
 

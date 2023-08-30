@@ -61,7 +61,7 @@ body {
 }
 
 #loading{
-    position: absolute;
+    position: fixed;
     top: 40%;
     right: 50%;
     opacity: 0.8;

@@ -27,17 +27,18 @@
         </div>
         <!-- <transition-group name="slide"> -->
         <b-list-group id="b-list-group">
-            <b-list-group-item v-for="dado in produtos" class="d-flex justify-content-between align-items-center mt-1"
+            <b-list-group-item v-for="dado in produtos" class="d-flex align-items-center mt-1"
                 id="listarProduto" :key="dado.idproduto" :variant="dado.semestoque ? 'dark' : null">
                 <!-- Grupos -->
                 <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
                 }}</b-badge>
                 <!-- Botão Somar -->
-                <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
+                <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem" @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
                 <!-- <b-avatar variant="success" icon="plus-square" class="m-1" id="somarItem" button :key="dado.idproduto"
                     @click="contar(dado.idproduto, 1)"></b-avatar> -->
                 <!-- Descrição do Produto -->
-                <div class="flex-grow-1 align-items-center ml-4">
+                <!-- class="flex-grow-2 align-items-center ml-4" -->
+                <div  id="descrProduto">
                     {{ dado.descrprod }}
                 </div>
                 <!-- Contador de quantidade -->
@@ -177,12 +178,43 @@ export default {
     font-size: 0.9em;
     /* font-size-adjust: inherit; */
     /* min-width: 100%; */
+    min-height: 70px;
     /* white-space: nowrap; Impede a quebra de linha */
 }
 
 
 #stickybox{
     background-color: #1f1f1f;
+}
+#somarItem {
+    position: absolute;
+    /* margin-left: 20px; */
+    /* padding: 0; */
+    /* display: block; */
+    margin: 0;
+    left: 5px;
+    top: 1px;
+    /* height: 20%; */
+
+}
+
+#descrGrupo {
+    position: absolute;
+    top: 1px;
+    left: 25%;
+    font-size: 0.6em;
+    min-width: 30%;
+}
+
+
+#descrProduto{
+    position: absolute;
+    left: 20%;
+    right: 15%;
+    align-items: center;
+    align-self: center;
+    /* margin-block-start: 10%; */
+    /* left: 10px; */
 }
 
 #qtdneg {
@@ -206,22 +238,6 @@ export default {
     /* height: 20%; */
 }
 
-#somarItem {
-    /* position: absolute; */
-    /* margin-left: 20px; */
-    left: 5px;
-    top: 1px;
-    /* height: 20%; */
-
-}
-
-#descrGrupo {
-    position: absolute;
-    top: 1px;
-    left: 25%;
-    font-size: 0.6em;
-    min-width: 30%;
-}
 
 #salvarDados {
     /* background-color: antiquewhite; */
