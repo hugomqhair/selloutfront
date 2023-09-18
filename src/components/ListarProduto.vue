@@ -14,7 +14,7 @@
                     <b-col cols="4">
                         <div v-if="selectData != ''" id="dadossellout" class="d-block w-100 justify-content-between">
                             <b-row>
-                                <b-badge variant="light">{{ selectLoja.length > 20 ? selectLoja.substring(0, 20) + '...' :
+                                <b-badge variant="light">{{ selectLoja.length > 15 ? selectLoja.substring(0, 15) + '...' :
                                     selectLoja }}</b-badge>
                                 <b-badge variant="secondary">{{ selectData }}</b-badge>
                             </b-row>
@@ -27,23 +27,25 @@
         </div>
         <!-- <transition-group name="slide"> -->
         <b-list-group id="b-list-group">
-            <b-list-group-item v-for="dado in produtos" class="d-flex align-items-center mt-1"
-                id="listarProduto" :key="dado.idproduto" :variant="dado.semestoque ? 'dark' : null">
+            <b-list-group-item v-for="dado in produtos" class="d-flex align-items-center mt-1" id="listarProduto"
+                :key="dado.idproduto" :variant="dado.semestoque ? 'dark' : null">
                 <!-- Grupos -->
                 <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
                 }}</b-badge>
                 <!-- Botão Somar -->
-                <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem" @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
+                <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem"
+                    @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
                 <!-- <b-avatar variant="success" icon="plus-square" class="m-1" id="somarItem" button :key="dado.idproduto"
                     @click="contar(dado.idproduto, 1)"></b-avatar> -->
                 <!-- Descrição do Produto -->
                 <!-- class="flex-grow-2 align-items-center ml-4" -->
-                <div  id="descrProduto">
+                <div id="descrProduto">
                     {{ dado.descrprod }}
                 </div>
-                <!-- Contador de quantidade -->
+                <!-- Contador de quantidade  TEMP: $bvModal.show('modal-zerarQtd')-->
                 <h4 v-if="!dado.semestoque">
-                    <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg">{{ dado.qtdneg }}</b-badge>
+                    <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg"
+                        @click="modalZerarQtd(dado.idproduto, dado.descrprod)">{{ dado.qtdneg }}</b-badge>
                 </h4>
                 <!-- Botão não tem na loja -->
                 <h6>
@@ -72,6 +74,21 @@
                 </b-list-group-item>
             </b-list-group>
         </b-modal>
+
+        <!-- Modal Confirmar zerar quantidade item   -->
+        <div>
+            <b-modal ref="modal-zerarQtd" hide-footer title="Zerar Quantidade para o  Item?">
+                <!-- <p><strong>{{ itemZerar.id }} - {{ itemZerar.descrprod }}</strong></p> -->
+                <!-- <p><strong>{{ itemZerar}}</strong></p> -->
+                <p>{{ itemId }} - <strong>{{ itemDescr }}</strong></p>
+                <b-row>
+                    <b-col lg="12" class="justify-content-between align-items-center">
+                        <b-button variant="success" @click="zerarItem(itemId)">Confirma</b-button>
+                        <b-button class="ml-2" variant="outline-danger"  @click="$refs['modal-zerarQtd'].toggle('#toggle-btn')">Cancelar</b-button>
+                    </b-col>
+                </b-row>
+            </b-modal>
+        </div>
     </div>
 </template>
 
@@ -83,7 +100,10 @@ export default {
             semcadastro: [],
             id: null,
             selloutid: this.$route.params.id,
-            cores: ['primary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'secondary']
+            cores: ['primary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'secondary'],
+            itemZerar:{},
+            itemDescr:'XX',
+            itemId:''
         }
     },
     created() {
@@ -132,6 +152,17 @@ export default {
             this.ordernarLista()
 
         },
+        modalZerarQtd(id, descrprod){
+            this.itemDescr = descrprod
+            this.itemId = id
+            this.$refs['modal-zerarQtd'].show()
+//            console.log(this.itemZerar)
+        },
+        zerarItem(id) {
+            const item = this.produtos.find(item => item.idproduto === id);
+            item.qtdneg = 0;
+            this.$refs['modal-zerarQtd'].toggle('#toggle-btn')
+        },
         ordernarLista() {
             this.produtos.sort((a, b) => a.grupo.localeCompare(b.grupo))
             //nomes.sort((a, b) => a.nome.localeCompare(b.nome));
@@ -173,7 +204,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 #listarProduto {
     font-size: 0.9em;
     /* font-size-adjust: inherit; */
@@ -183,9 +213,10 @@ export default {
 }
 
 
-#stickybox{
+#stickybox {
     background-color: #1f1f1f;
 }
+
 #somarItem {
     position: absolute;
     /* margin-left: 20px; */
@@ -207,7 +238,7 @@ export default {
 }
 
 
-#descrProduto{
+#descrProduto {
     position: absolute;
     left: 20%;
     right: 15%;
