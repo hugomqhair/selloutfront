@@ -4,6 +4,7 @@ import SelloutItem from "./components/SelloutItem.vue"
 import Inicio from "./components/Inicio.vue"
 import Login from "./components/Login.vue"
 import ResultadoMensal from "./components/ResultadoMensal.vue"
+import ResultadoMensalAdmin from "./components/ResultadoMensalAdmin.vue"
 
 
 import Teste from "./components/Teste.vue"
@@ -17,6 +18,7 @@ export default new Router({
         ,{path:'/SelloutItem/:id', component: SelloutItem}
         ,{path:'/Login', component: Login}
         ,{path:'/ResultadoMensal', component: ResultadoMensal}
+        ,{path:'/ResultadoMensalAdmin', component: ResultadoMensalAdmin}
         ,{path:'/Teste', component: Teste}
     ]
 })

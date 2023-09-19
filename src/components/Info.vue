@@ -19,6 +19,7 @@
             <b-navbar-nav class="menuitems px-2">
               <b-nav-item class="item" @click="$router.push('/')">Home</b-nav-item>
               <b-nav-item class="item" @click="ResultadoMensal">Mensal</b-nav-item>
+              <b-nav-item class="item" @click="$router.push('/ResultadoMensalAdmin')">Mensal Admin</b-nav-item>
               <b-nav-item @click="logout" class="item">Sair</b-nav-item>
             </b-navbar-nav>
           </b-nav>
