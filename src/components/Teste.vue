@@ -18,14 +18,10 @@
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
+        <br><hr>
+        <div id="camera"></div>
 
-        <button v-on:click="add">Add</button>
-        <button v-on:click="remove">Remove</button>
-        <transition-group name="list" tag="p">
-            <span v-for="item in items" v-bind:key="item" class="list-item">
-                {{ item }}
-            </span>
-        </transition-group>
+
     </div>
 </template>
   
@@ -38,6 +34,11 @@ export default {
             nextNum: 10
         }
     },
+    created() {
+        console.log('Created')
+       
+    },
+
     methods: {
         randomIndex: function () {
             return Math.floor(Math.random() * this.items.length)
@@ -71,4 +72,5 @@ export default {
     {
     opacity: 0;
     transform: translateY(30px);
-}</style>
+}
+</style>

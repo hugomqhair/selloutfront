@@ -3,6 +3,9 @@ node_modules
 /dist
 /back/node_modules
 /front/node_modules
+.firebase
+.firebaserc
+firebase.json
 
 
 # local env files
