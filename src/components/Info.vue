@@ -1,14 +1,8 @@
 <template>
   <div id="info" v-if="login.usuario">
-    <!-- b-list-group-item  @click="logout"-->
     <div class="d-flex align-items-center" id="avatar">
     
-      <!-- <b-navbar-toggle v-b-toggle.menu>
-      <template #default="{ expanded }">
-        <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
-        <b-icon v-else icon="chevron-bar-down"></b-icon>
-      </template>
-    </b-navbar-toggle> -->
+
 
       <b-avatar variant="success" class="mr-2" button v-b-toggle.menu></b-avatar>
       <span class="mr-auto">{{ login.usuario }}</span>
@@ -19,28 +13,14 @@
             <b-navbar-nav class="menuitems px-2">
               <b-nav-item class="item" @click="$router.push('/')">Home</b-nav-item>
               <b-nav-item class="item" @click="ResultadoMensal">Mensal</b-nav-item>
-              <b-nav-item class="item" @click="$router.push('/ResultadoMensalAdmin')">Mensal Admin</b-nav-item>
+              <div v-if="login.gestor">
+                <b-nav-item  class="item" @click="$router.push('/ResultadoMensalAdmin')">Mensal Admin</b-nav-item>
+              </div>
               <b-nav-item @click="logout" class="item">Sair</b-nav-item>
             </b-navbar-nav>
           </b-nav>
         </div>
       </b-collapse>
-
-    <!-- <b-navbar-toggle target="navbar-toggle-collapse">
-      <template #default="{ expanded }">
-        <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
-        <b-icon v-else icon="chevron-bar-down"></b-icon>
-      </template>
-    </b-navbar-toggle>
-
-    <b-collapse id="navbar-toggle-collapse" is-nav>
-      <b-navbar-nav class="ml-auto">
-        <b-nav-item href="#">Link 1</b-nav-item>
-        <b-nav-item href="#">Link 2</b-nav-item>
-        <b-nav-item href="#" disabled>Disabled</b-nav-item>
-      </b-navbar-nav>
-    </b-collapse> -->
-
 
   </div>
 </template>

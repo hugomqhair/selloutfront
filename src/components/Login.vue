@@ -38,21 +38,23 @@ export default {
     },
     methods: {
         logar() {
+            //console.log({usuario:this.usuario.trim(), senha:this.senha})
             this.$store.state.loading = !this.$store.state.loading
-            this.$http.post(`/auth`, {usuario:this.usuario, senha:this.senha})
+            this.$http.post(`/auth`, {usuario:this.usuario.trim(), senha:this.senha})
                 .then(resp => {
                     //console.log('resp', resp)
-                    this.$store.commit('setUser', { id: resp.data.id, usuario: resp.data.usuario, token: resp.data.token })
+                    this.$store.commit('setUser', { id: resp.data.id, usuario: resp.data.usuario, token: resp.data.token, gestor:resp.data.gestor})
                     localStorage.setItem('MQToken', JSON.stringify(resp.data.token))
                     this.$router.push('/')
                     this.$store.state.loading = !this.$store.state.loading
                 }).catch(err => {
-                    console.log('Erro Login', err)
+                    //console.log('Erro Login', err)
                     if (err.code == 'ERR_NETWORK') {
                         this.$store.state.mensagens = [{ texto: 'Erro com o Servidor, informe o TI', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
-                        this.$store.state.loading = !this.$store.state.loading
+                        this.$store.state.loading = false
                     } else {
                         this.$store.state.mensagens = [{ texto: err.response.data.err, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
+                        this.$store.state.loading = false
                     }
                     //this.$store.commit('setUser',{id:null,usuario:null, token: null })
                 })
