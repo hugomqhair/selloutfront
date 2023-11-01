@@ -31,13 +31,14 @@ export default {
     },
     methods: {
         salvar() {
-            console.log('salvando...')
+            //console.log('salvando...')
+            //console.log('this.dado', this.dado)
 			const metodo = this.id ? 'patch' : 'post'
 			this.$http[metodo](`/insert`, this.dado)
             .then(resp => {
                 this.obterdados()
                 this.dado.texto = ''
-                console.log(resp)
+                //console.log(resp)
             })
 				// .then(_ => {
 				// 	this.mensagens.push({
@@ -48,9 +49,9 @@ export default {
 		},
         obterdados(){
             this.$http.get('select').then(res => {
-                console.log('obterDados:',res)
+                //console.log('obterDados:',res)
                 this.dados = res.data
-                console.log(res.data)
+                //console.log(res.data)
             })
         },
     },

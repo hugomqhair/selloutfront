@@ -9,9 +9,15 @@
                     <b-col cols="2">
                         <b-button v-b-modal.modal-semcadastro><b-icon icon="archive" aria-hidden="true"></b-icon></b-button>
                     </b-col>
+                    <b-col cols="2">
+                        <b-button bg-light @click="filtraAlterados=!filtraAlterados">
+                            <b-icon scale="1.5" icon="check-square"  :variant="filtraAlterados ? 'success' : 'light'"  aria-hidden="true"></b-icon>
+                        </b-button>
+                    </b-col>
 
-                    <b-col cols="4"><b-button class="" variant="success" @click="salvarVenda">Salvar</b-button></b-col>
-                    <b-col cols="4">
+
+                    <b-col cols="3"><b-button class="" variant="success" @click="salvarVenda">Salvar</b-button></b-col>
+                    <b-col cols="3">
                         <div v-if="selectData != ''" id="dadossellout" class="d-block w-100 justify-content-between">
                             <b-row>
                                 <b-badge variant="light">{{ selectLoja.length > 15 ? selectLoja.substring(0, 15) + '...' :
@@ -27,34 +33,32 @@
         </div>
         <!-- <transition-group name="slide"> -->
         <b-list-group id="b-list-group">
-            <b-list-group-item v-for="dado in produtos" class="d-flex align-items-center mt-1" id="listarProduto"
+            <b-list-group-item v-for="dado in produtos"  class="d-flex align-items-center mt-1" id="listarProduto"
                 :key="dado.idproduto" :variant="dado.semestoque ? 'dark' : null">
-                <!-- Grupos -->
-                <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
-                }}</b-badge>
-                <!-- Botão Somar -->
-                <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem"
-                    @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
-                <!-- <b-avatar variant="success" icon="plus-square" class="m-1" id="somarItem" button :key="dado.idproduto"
-                    @click="contar(dado.idproduto, 1)"></b-avatar> -->
-                <!-- Descrição do Produto -->
-                <!-- class="flex-grow-2 align-items-center ml-4" -->
-                <div id="descrProduto">
-                    {{ dado.descrprod }}
-                </div>
-                <!-- Contador de quantidade  TEMP: $bvModal.show('modal-zerarQtd')-->
-                <h4 v-if="!dado.semestoque">
-                    <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg"
-                        @click="modalZerarQtd(dado.idproduto, dado.descrprod)">{{ dado.qtdneg }}</b-badge>
-                </h4>
-                <!-- Botão não tem na loja -->
-                <h6>
-                    <b-avatar button :variant="dado.semestoque ? 'primary' : 'secondary'" aria-hidden="true" id="ruptura"
-                        icon="cart-plus-fill" size="1.5rem"
-                        @click="semEstoque(dado.idproduto, !dado.semestoque)"></b-avatar>
-                    <b-avatar button variant="secondary" id="semCadastro" icon="archive" size="1.5rem"
-                        @click="semCadastro(dado.idproduto, !dado.semcadastro)"></b-avatar>
-                </h6>
+                <template v-if="dado.qtdneg>0 || dado.semestoque || !filtraAlterados">
+                    <!-- Grupos -->
+                    <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
+                    }}</b-badge>
+                    <!-- Botão Somar -->
+                    <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem"
+                        @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
+                    <div id="descrProduto">
+                        {{ dado.descrprod }}
+                    </div>
+                    <!-- Contador de quantidade  TEMP: $bvModal.show('modal-zerarQtd')-->
+                    <h4>
+                        <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg"
+                            @click="modalZerarQtd(dado.idproduto, dado.descrprod)">{{ dado.qtdneg }}</b-badge>
+                    </h4>
+                    <!-- Botão não tem na loja -->
+                    <h6>
+                        <b-avatar button :variant="dado.semestoque ? 'primary' : 'secondary'" aria-hidden="true" id="ruptura"
+                            icon="cart-plus-fill" size="1.5rem"
+                            @click="semEstoque(dado.idproduto, !dado.semestoque)"></b-avatar>
+                        <b-avatar button variant="secondary" id="semCadastro" icon="archive" size="1.5rem"
+                            @click="semCadastro(dado.idproduto, !dado.semcadastro)"></b-avatar>
+                    </h6>
+                </template>
             </b-list-group-item>
         </b-list-group>
         <!-- </transition-group> -->
@@ -103,7 +107,8 @@ export default {
             cores: ['primary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'secondary'],
             itemZerar:{},
             itemDescr:'XX',
-            itemId:''
+            itemId:'',
+            filtraAlterados:false
         }
     },
     created() {
@@ -143,8 +148,8 @@ export default {
             this.semcadastro.push(this.produtos.filter(val => val.idproduto === id)[0])
             this.produtos = this.produtos.filter(val => val.idproduto != id)
         },
-        comCadastro(id, val) {
-            console.log(val)
+        comCadastro(id) {
+            //console.log(val)
             const item = this.semcadastro.find(item => item.idproduto === id);
             item.semcadastro = false;
             this.produtos.push(this.semcadastro.filter(val => val.idproduto === id)[0])
@@ -170,9 +175,8 @@ export default {
         salvarVenda() {
             this.$store.state.loading = !this.$store.state.loading
             this.produtos = this.produtos.concat(this.semcadastro)
-            // let salvaItens = this.produtos.filter(val => val.qtdneg > 0 || val.semestoque || val.semcadastro)
-            //     .map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro: obj.semcadastro, semestoque: obj.semestoque }))
-            //     .map(produto => ({ ...produto, idsellout: this.selloutid }))
+
+            //let salvaItens = this.produtos.filter(v => {return v.qtdneg>0 || v.semestoque == true || v.semcadastro }) --Tratar nessa linha para não salvar tudo sempre
             let salvaItens = this.produtos.map(obj => ({ idsellout: this.selloutid, idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro: obj.semcadastro, semestoque: obj.semestoque }))
             //let faltas = this.listaFaltas.map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
             //console.log(salvaItens)
