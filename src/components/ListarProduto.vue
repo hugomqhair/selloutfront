@@ -33,33 +33,35 @@
         </div>
         <!-- <transition-group name="slide"> -->
         <b-list-group id="b-list-group">
-            <b-list-group-item v-for="dado in produtos"  class="d-flex align-items-center mt-1" id="listarProduto"
-                :key="dado.idproduto" :variant="dado.semestoque ? 'dark' : null">
-                <template v-if="dado.qtdneg>0 || dado.semestoque || !filtraAlterados">
-                    <!-- Grupos -->
-                    <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
-                    }}</b-badge>
-                    <!-- Botão Somar -->
-                    <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem"
-                        @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
-                    <div id="descrProduto">
-                        {{ dado.descrprod }}
-                    </div>
-                    <!-- Contador de quantidade  TEMP: $bvModal.show('modal-zerarQtd')-->
-                    <h4>
-                        <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg"
-                            @click="modalZerarQtd(dado.idproduto, dado.descrprod)">{{ dado.qtdneg }}</b-badge>
-                    </h4>
-                    <!-- Botão não tem na loja -->
-                    <h6>
-                        <b-avatar button :variant="dado.semestoque ? 'primary' : 'secondary'" aria-hidden="true" id="ruptura"
-                            icon="cart-plus-fill" size="1.5rem"
-                            @click="semEstoque(dado.idproduto, !dado.semestoque)"></b-avatar>
-                        <b-avatar button variant="secondary" id="semCadastro" icon="archive" size="1.5rem"
-                            @click="semCadastro(dado.idproduto, !dado.semcadastro)"></b-avatar>
-                    </h6>
-                </template>
-            </b-list-group-item>
+            <template v-for="dado in produtos">
+                <b-list-group-item v-if="dado.qtdneg>0 || dado.semestoque || !filtraAlterados"  class="d-flex align-items-center mt-1" id="listarProduto"
+                    :key="dado.idproduto" :variant="dado.semestoque ? 'dark' : null">
+                    <!-- <template v-if="dado.qtdneg>0 || dado.semestoque || !filtraAlterados"> -->
+                        <!-- Grupos -->
+                        <b-badge pill :variant="cores[dado.idgrupo > 8 ? 7 : dado.idgrupo - 1]" id="descrGrupo">{{ dado.grupo
+                        }}</b-badge>
+                        <!-- Botão Somar -->
+                        <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem"
+                            @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
+                        <div id="descrProduto">
+                            {{ dado.descrprod }} ({{ dado.idproduto }})
+                        </div>
+                        <!-- Contador de quantidade  TEMP: $bvModal.show('modal-zerarQtd')-->
+                        <h4>
+                            <b-badge :variant="dado.qtdneg == '0' ? 'dark' : 'success'" id="qtdneg"
+                                @click="modalZerarQtd(dado.idproduto, dado.descrprod)">{{ dado.qtdneg }}</b-badge>
+                        </h4>
+                        <!-- Botão não tem na loja -->
+                        <h6>
+                            <b-avatar button :variant="dado.semestoque ? 'primary' : 'secondary'" aria-hidden="true" id="ruptura"
+                                icon="cart-plus-fill" size="1.5rem"
+                                @click="semEstoque(dado.idproduto, !dado.semestoque)"></b-avatar>
+                            <b-avatar button variant="secondary" id="semCadastro" icon="archive" size="1.5rem"
+                                @click="semCadastro(dado.idproduto, !dado.semcadastro)"></b-avatar>
+                        </h6>
+                    <!-- </template> -->
+                </b-list-group-item>
+            </template>
         </b-list-group>
         <!-- </transition-group> -->
 
@@ -101,6 +103,7 @@ export default {
     data() {
         return {
             produtos: [],
+            listaOriginal: [],
             semcadastro: [],
             id: null,
             selloutid: this.$route.params.id,
@@ -108,8 +111,16 @@ export default {
             itemZerar:{},
             itemDescr:'XX',
             itemId:'',
-            filtraAlterados:false
+            filtraAlterados:false,
         }
+    },
+    watch:{
+        // listaOriginal(){
+        //     setInterval(() => {
+        //         let dt = new Date()
+        //         console.log(dt, this.listaOriginal)
+        //     }, 5000)
+        // }
     },
     created() {
         if (!this.$store.state.login.token) {
@@ -117,6 +128,9 @@ export default {
         } else {
             this.obterdados(this.selloutid)
         }
+    },
+    mounted(){
+      
     },
     computed: {
         selectLoja() {
@@ -161,7 +175,6 @@ export default {
             this.itemDescr = descrprod
             this.itemId = id
             this.$refs['modal-zerarQtd'].show()
-//            console.log(this.itemZerar)
         },
         zerarItem(id) {
             const item = this.produtos.find(item => item.idproduto === id);
@@ -170,16 +183,28 @@ export default {
         },
         ordernarLista() {
             this.produtos.sort((a, b) => a.grupo.localeCompare(b.grupo))
-            //nomes.sort((a, b) => a.nome.localeCompare(b.nome));
         },
         salvarVenda() {
             this.$store.state.loading = !this.$store.state.loading
             this.produtos = this.produtos.concat(this.semcadastro)
-
-            //let salvaItens = this.produtos.filter(v => {return v.qtdneg>0 || v.semestoque == true || v.semcadastro }) --Tratar nessa linha para não salvar tudo sempre
-            let salvaItens = this.produtos.map(obj => ({ idsellout: this.selloutid, idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro: obj.semcadastro, semestoque: obj.semestoque }))
+            
+            // console.log('this.produtosOriginal',original)
+            // let semestoque = this.produtos.filter(el => {
+                //     const el2 = original.find((ori) => ori.idproduto === el.idproduto)
+                //     return el.semestoque != el2.semestoque
+                // })
+                console.log('produtos', this.produtos)
+                //console.log('original', original)
+                // let diferenca = this.produtos.filter(a => a.semestoque !== original.find(b => b.idproduto === a.idproduto).semestoque)
+                
+                // console.log('lista de alterados semestoque', diferenca)                                        
+                
+                let salvaItens = this.produtos.filter(v => {return v.qtdneg>0 || v.semestoque !== v.cpsemestoque || v.semcadastro !== v.cpsemcadastro})
+                salvaItens = salvaItens.map(obj => ({ idsellout: this.selloutid, idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro: obj.semcadastro, semestoque: obj.semestoque }))
+            
+            //let salvaItens = this.produtos.map(obj => ({ idsellout: this.selloutid, idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro: obj.semcadastro, semestoque: obj.semestoque })) //Original
             //let faltas = this.listaFaltas.map(obj => ({ idproduto: obj.idproduto, qtdneg: obj.qtdneg })).map(produto => ({ ...produto, idsellout: this.selloutid }))
-            //console.log(salvaItens)
+            console.log(salvaItens)
             this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
                     if (resp) {
@@ -195,10 +220,9 @@ export default {
             //console.log('Token', localStorage.getItem('MQToken'))
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
                 //console.log(res.data)
-                this.produtos = res.data.filter(item => item.semcadastro == false)
-                this.semcadastro = res.data.filter(item => item.semcadastro == true)
+                this.produtos = res.data.filter(item => item.semcadastro == false).map(item => {return {...item, cpsemestoque:item.semestoque, cpsemcadastro: item.semcadastro}})
+                this.semcadastro = res.data.filter(item => item.semcadastro == true).map(item => {return {...item, cpsemestoque:item.semestoque,cpsemcadastro: item.semcadastro}})
                 this.$store.state.loading = false
-                //console.log(this.produtos)
             })
         },
 
