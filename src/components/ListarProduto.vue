@@ -4,19 +4,24 @@
 
             <b-list-group-item class="justify-content-between align-items-center" id="stickybox">
                 <b-row>
-                    <b-col cols="2"><b-avatar v-if="selectData != ''" variant="warning" class="" icon="arrow-left-square"
-                            @click="home" button></b-avatar></b-col>
                     <b-col cols="2">
-                        <b-button v-b-modal.modal-semcadastro><b-icon icon="archive" aria-hidden="true"></b-icon></b-button>
+                        <b-button variant="warning" size="sm">
+                            <b-icon v-if="selectData != ''"  class="" icon="arrow-left-square"
+                                @click="home" button>
+                            </b-icon>
+                        </b-button>
                     </b-col>
                     <b-col cols="2">
-                        <b-button bg-light @click="filtraAlterados=!filtraAlterados">
+                        <b-button size="sm" v-b-modal.modal-semcadastro><b-icon icon="archive" aria-hidden="true"></b-icon></b-button>
+                    </b-col>
+                    <b-col cols="2">
+                        <b-button size="sm" bg-light @click="filtraAlterados=!filtraAlterados">
                             <b-icon scale="1.5" icon="check-square"  :variant="filtraAlterados ? 'success' : 'light'"  aria-hidden="true"></b-icon>
                         </b-button>
                     </b-col>
 
 
-                    <b-col cols="3"><b-button class="" variant="success" @click="salvarVenda">Salvar</b-button></b-col>
+                    <b-col cols="3"><b-button size="sm" class="" variant="success" @click="salvarVenda">Salvar</b-button></b-col>
                     <b-col cols="3">
                         <div v-if="selectData != ''" id="dadossellout" class="d-block w-100 justify-content-between">
                             <b-row>
@@ -44,7 +49,7 @@
                         <b-button pill v-if="!dado.semestoque" variant="success" class="m-1" :key="dado.idproduto" id="somarItem"
                             @click="contar(dado.idproduto, 1)"><b-icon icon="plus-square"></b-icon></b-button>
                         <div id="descrProduto">
-                            {{ dado.descrprod }} ({{ dado.idproduto }})
+                            {{ dado.descrprod }}
                         </div>
                         <!-- Contador de quantidade  TEMP: $bvModal.show('modal-zerarQtd')-->
                         <h4>
@@ -304,11 +309,15 @@ export default {
     border-radius: 10px;
     border-color: darkgrey;
     border-style: dotted;
-    padding: auto;
+    /* padding: auto; */
     margin: 0px;
     /* justify-content: center;
     align-items: center; */
     /* max-width: 300px; */
+}
+
+#dadossellout{
+    font-size: 0.9em;
 }
 
 @media (max-width: 340px) {
