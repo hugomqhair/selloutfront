@@ -4,7 +4,9 @@ import SelloutItem from "./components/SelloutItem.vue"
 import Inicio from "./components/Inicio.vue"
 import Login from "./components/Login.vue"
 import ResultadoMensal from "./components/ResultadoMensal.vue"
-import ResultadoMensalAdmin from "./components/ResultadoMensalAdmin.vue"
+import ResultadoMensalAdmin from "./components/admin/ResultadoMensalAdmin.vue"
+import MenuAdmin from "./components/admin/MenuAdmin.vue"
+import PromoterObjetivo from "./components/admin/PromoterObjetivo.vue"
 
 
 import Teste from "./components/Teste.vue"
@@ -20,5 +22,7 @@ export default new Router({
         ,{path:'/ResultadoMensal', component: ResultadoMensal}
         ,{path:'/ResultadoMensalAdmin', component: ResultadoMensalAdmin}
         ,{path:'/Teste', component: Teste}
+        ,{path:'/MenuAdmin', component: MenuAdmin}
+        ,{path:'/PromoterObjetivo', component: PromoterObjetivo}
     ]
 })

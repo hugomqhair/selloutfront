@@ -14,7 +14,7 @@
               <b-nav-item class="item" @click="$router.push('/')">Home</b-nav-item>
               <b-nav-item class="item" @click="ResultadoMensal">Mensal</b-nav-item>
               <div v-if="login.gestor">
-                <b-nav-item  class="item" @click="$router.push('/ResultadoMensalAdmin')">Mensal Admin</b-nav-item>
+                <b-nav-item  class="item" @click="$router.push('/MenuAdmin')">Admin</b-nav-item>
               </div>
               <b-nav-item @click="logout" class="item">Sair</b-nav-item>
             </b-navbar-nav>
