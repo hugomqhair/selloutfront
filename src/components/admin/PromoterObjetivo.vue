@@ -3,22 +3,33 @@
         <h4 align="center">Manutenção de Objetivos</h4>
         <div>
             <div>
-                <label>Ano:</label>
-                <b-form-select v-model="ano" :options="anos"></b-form-select>
-            </div>
-            <hr>
-            <b-container fluid>
                 <b-row>
-                    <b-col cols="4" col lg="3">Promoters</b-col>
-                    <b-col col lg="3" v-for="mes in trim1" :key="mes"><label> {{ mes }}</label></b-col>
+                    <b-col>
+                        <label>Ano:</label>
+                    </b-col>
+                    <b-col>
+                        <b-form-select v-model="ano" :options="anos"></b-form-select>
+                    </b-col>
+                    <b-col>
+                        <b-form-select v-model="mes" :options="meses"></b-form-select>
+                    </b-col>
+                    <b-col>
+                        <b-button @click="loadAno()">Load</b-button>
+                    </b-col>
+                </b-row>
+            </div>
+
+            <b-container fluid v-if="inicio">
+                <b-row>
+                    <b-col col lg="3" v-for="cab in promoters[0].meses" :key="cab.mes"><label> {{ cab.mes }}</label></b-col>
                 </b-row>
 
-                <b-row class="my-1" v-for="dado in promoters" :key="dado.id">
+                <b-row class="my-1" v-for="(dado, j) in promoters" :key="dado.id">
                     <b-col cols="4" col lg="3">
-                        <label>{{ dado.nome }}</label>
+                        <label> {{ j }} - {{ dado.nome }}</label>
                     </b-col>
-                    <b-col col sm="3" v-for="mes in trim1" :key="mes">
-                        <b-form-input :v-model="`teste.y${ano}.${mes}`" :id="mes"></b-form-input>
+                    <b-col col sm="3">
+                        <b-form-input v-model="dado.quant" :id="dado.nome + dado.id" :key="dado.id" type="number" align="right"></b-form-input>
                     </b-col>
                 </b-row>
                 <div class="mt-4">
@@ -27,11 +38,7 @@
                     </b-row>
                 </div>
             </b-container>
-            <p>{{ ano }}</p>
-            <span>{{ teste }}</span>
-            <ul>
-                <li v-for="(c, i) in teste" :key="i">{{ c }}</li>
-            </ul>
+
         </div>
 
     </div>
@@ -42,13 +49,30 @@ export default {
     name: 'promoterObjetivo',
     data() {
         return {
-            promoters: [],
+            inicio: false,
+            promoters: [{ id: null, nome: null, meses: [{ mes: null, valor: null }] }],
+            pro: [
+                { id: 1, nome: 'Promotor 1', meses: [{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }] },
+                { id: 2, nome: 'Promotor 2', meses: [{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }] },
+            ],
             anos: ['2023', '2024'],
-            meses: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-            trim1: ['Jan', 'Fev', 'Mar'],
-            teste: {inicio:'semdados', fim:"dados fim"},
+            meses: [
+                { value: '01', text: 'Jan' },
+                { value: '02', text: 'Fev' },
+                { value: '03', text: 'Mar' },
+                { value: '04', text: 'Abr' },
+                { value: '05', text: 'Mai' },
+                { value: '06', text: 'Jul' },
+                { value: '07', text: 'Jul' },
+                { value: '08', text: 'Ago' },
+                { value: '09', text: 'Set' },
+                { value: '10', text: 'Out' },
+                { value: '11', text: 'Nov' },
+                { value: '12', text: 'Dez' },
+            ],
             ano: '2023',
-            dados:{}
+            mes: '01',
+
         }
     },
     computed: {
@@ -58,29 +82,64 @@ export default {
     },
     created() {
         //console.log(this.$store.state.login)
-        if (!this.$store.state.login.token) {
-            this.$router.push(`/Login`)
-        } else {
-            this.consultaPromoter()
-        }
+        // if (!this.$store.state.login.token) {
+        //     this.$router.push(`/Login`)
+        // } else {
+        //  this.consultaPromoter()
+        // }
     },
     methods: {
         consultaPromoter() {
-            this.$http.get(`consulta?operacao=promoter`).then(res => {
-                this.promoters = res.data.filter(v => v.gestor === true).map(v => { return { nome: v.nome } })
-                console.log(this.promoters)
+        },
+        salvar() {
+            let savedata = this.promoters.map(v => { return { idpromoter: v.id, ano: this.ano, mes: this.mes, quant: v.quant, dtref: `${this.ano}-${this.mes}-01` } })
+            console.log(savedata)
+            this.$store.state.loading = !this.$store.state.loading
+            this.$http.post(`/objetivopromoter`, savedata)
+                .then(resp => {
+                    if (resp) {
+                        this.$store.state.mensagens = [{ texto: 'Objetivo Promoteres Salvo!!! ', tipo: 'success', tempo: 2, dismissCountDown: 0 }]
+                        this.$store.state.loading = false
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.$store.state.loading = false
+                })
 
+        },
+        loadAno() {
+            this.$http.get(`consulta?operacao=promoter`).then(res => {
+                this.promoters = res.data.filter(v => v.gestor === true).map(v => { return { id: v.id, nome: v.nome } })
+                // .map(v => {return {...v, meses:[{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }]}})
+                console.log(this.promoters)
+                this.$http.get(`consulta?operacao=objetivopromoter`).then(objpro => {
+                    console.log(objpro.data)
+                    let objetivo = objpro.data
+                    let nummes = parseInt(this.mes, 10)
+                    let numano = parseInt(this.ano, 10)
+                    
+                    this.promoters = this.promoters.map((promo) => {
+                        let result = objetivo.filter((itemValor) => { return itemValor.idpromoter == promo.id && numano == itemValor.ano && nummes == itemValor.mes
+                            //itemValor.idpromoter === promo.id && numano === itemValor.ano && nummes === itemValor.mes
+                            //console.log(itemValor.idpromoter === promo.id && numano === itemValor.ano && nummes === itemValor.mes ? itemValor : 'Nada')
+                            // console.log( numano , itemValor.ano,  )
+                        })
+                        console.log(result[0]  )
+                        return {
+                            ...promo,
+                            quant: result[0] ? result[0].quant : 0
+                        }
+                        
+
+                    })
+                })
+                this.inicio = true
             }).catch(err => {
-                    console.log('ERRO ***', err)
-                    this.$store.state.mensagens = [{ texto: 'Falha de Servidor (obterLojas), informar ao TI', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
+                console.log('ERRO ***', err)
+                this.$store.state.mensagens = [{ texto: 'Falha de Servidor (obterLojas), informar ao TI', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
             })
-        },
-        salvar(){
-            console.log('Jan', this.teste.y2023.Jan)
-            console.log('Fev', teste.y2023.Fev)
-            this.teste.chave = "chave"
-            console.log('teste', this.teste)
-        },
+        }
 
     },
 

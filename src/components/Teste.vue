@@ -18,8 +18,27 @@
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
-        <br><hr>
+        <br>
+        <hr>
         <div id="camera"></div>
+        <hr>
+        <template>
+            <div>
+                <b-row class="my-1" v-for="(dado, j) in promoters" :key="dado.id">
+                    <b-col cols="4" col lg="3">
+                        <label>{{ j }} - {{ dado.nome }}</label>
+                    </b-col>
+                    <b-col col sm="3" v-for="(campo, i) in dado.meses" :key="i">
+                        <!-- Usando v-model para a propriedade 'valor' em um objeto dentro do array -->
+                        <b-form-input v-model="campo.valor" :id="dado.id + campo.mes"
+                            :key="dado.id + campo.mes"></b-form-input>
+                        <label>{{ campo.valor }}</label>
+                    </b-col>
+                </b-row>
+            </div>
+        </template>
+
+
 
 
     </div>
@@ -31,12 +50,17 @@ export default {
     data() {
         return {
             items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            nextNum: 10
+            nextNum: 10,
+            promoters: [
+                { id: 1, nome: 'Promotor 1', meses: [{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }] },
+                { id: 2, nome: 'Promotor 2', meses: [{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }] },
+            ]
+
         }
     },
     created() {
         console.log('Created')
-       
+
     },
 
     methods: {
