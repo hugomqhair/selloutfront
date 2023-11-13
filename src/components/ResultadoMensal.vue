@@ -6,14 +6,14 @@
             <b-card v-for="mes in mensal" :key="mes.mes" border-variant="light" :header="mes.mes" header-bg-variant="dark"
                 header-text-variant="success" align="center">
                 <b-card-text>
-                    <!-- <h4>
-                        <b-badge :variant="mes.venda == '0' ? 'dark' : 'success'" id="qtdneg">{{ mes.qtdneg }}</b-badge>
-                    </h4> -->
+                    <h4>
+                        <b-badge :variant="mes.objetivo == '99' ? 'dark' : 'success'" id="qtdneg">{{ mes.objetivo }}</b-badge>
+                    </h4>
                     <b-badge :variant="mes.cor" class="mb-2" >{{ mes.percperiodo }}% média diaria</b-badge>
                     <div class="mt-2">
                         <span class="texto">% Objetivo Mensal</span>
                     </div>
-                    <b-progress striped height="2rem" :value="(mes.qtdneg / objetivo) * 100" max="100" show-progress
+                    <b-progress striped height="2rem" :value="(mes.qtdneg / mes.objetivo) * 100" max="100" show-progress
                         class="mb-2" :variant="mes.cor"></b-progress>
                     <span id="qtdnegdias" class="texto">{{ mes.qtdneg }} vendas em {{ mes.dias }} dias</span>
 
@@ -58,7 +58,7 @@ export default {
         corObjetivo() {
             this.mensal = this.mensal.map(val => {
                 let diasperiodo = (val.dias / this.diasmes)
-                let objetivoperiodo = (this.objetivo * diasperiodo)
+                let objetivoperiodo = (val.objetivo * diasperiodo)
                 let percperiodo = ((val.qtdneg / objetivoperiodo) * 100).toFixed(0)
                 let cor
                 if (percperiodo < 60) {
@@ -71,6 +71,7 @@ export default {
                 return { ...val, percperiodo, cor }
 
             })
+            // console.log(this.mensal)
         },
         resultadoMensal() {
             //console.log('this.login',this.login)

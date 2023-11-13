@@ -1,6 +1,6 @@
 <template>
     <div class="resultadoMensalAdmin">
-        <h6>Objetivo Mensal {{ objetivo }}, considerando {{ diasmes }} dias</h6>
+        <h6>Objetivo Mensal, (considerando {{ diasmes }} dias)</h6>
         <div>
             <b-table table-variant="light" head-variant="dark" striped outlined :items="mensal" :fields="fields">
                 <template #cell(percperiodo)="data">
@@ -22,13 +22,14 @@ export default {
         return {
             mensal: [],
             fields: [
-                { key: "promoter", label: "Promoter", sortable: true }
-                , { key: "qtdneg", label: "Qtd", sortable: true }
+                 { key: "promoter", label: "Promoter", sortable: true }
+                ,{ key: "qtdneg", label: "Qtd", sortable: true }
                 ,{key:"dias", label:"Dias", sortable:true}
-                , { key: "objetivoperiodo", label: "% Mês" }
-                , { key: "percperiodo", label: "% Dia" }
+                ,{key:"objetivo", label:"Objetivo", sortable:true}
+                ,{ key: "objetivoperiodo", label: "% Mês" }
+                ,{ key: "percperiodo", label: "% Dia" }
             ],
-            objetivo: 80,
+            // objetivo: 80,
             diasmes: 25
         }
     },
@@ -48,9 +49,9 @@ export default {
     methods: {
         Objetivo() {
             this.mensal = this.mensal.map(val => {
-                let objetivoperiodo = ((val.qtdneg / this.objetivo) * 100).toFixed(2)
+                let objetivoperiodo = ((val.qtdneg / val.objetivo) * 100).toFixed(2)
                 let diasperiodo = (val.dias / this.diasmes)
-                let objetivoper = (this.objetivo * diasperiodo)
+                let objetivoper = (val.objetivo * diasperiodo)
                 let percperiodo = ((val.qtdneg / objetivoper) * 100).toFixed(0)
                 let cor
                 if (percperiodo < 60) {

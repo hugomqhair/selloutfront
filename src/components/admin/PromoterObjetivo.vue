@@ -1,20 +1,31 @@
 <template>
     <div class="promoterObjetivo">
-        <h4 align="center">Manutenção de Objetivos</h4>
+        <b-row>
+            <h4 align="center">Manutenção de Objetivos</h4>
+        </b-row>
         <div>
-            <div>
-                <b-row>
-                    <b-col>
-                        <label>Ano:</label>
-                    </b-col>
-                    <b-col>
+            <!-- <filterAnoMes 
+            @filtraranomes="filtar"
+            ></filterAnoMes> -->
+            <div id="cabecalho">
+                <b-row align-h="center">
+                    <b-col cols="4">
                         <b-form-select v-model="ano" :options="anos"></b-form-select>
+                        <b-form-text>Ano</b-form-text>
                     </b-col>
-                    <b-col>
+                    <b-col cols="4">
                         <b-form-select v-model="mes" :options="meses"></b-form-select>
+                        <b-form-text>Mês</b-form-text>
                     </b-col>
-                    <b-col>
-                        <b-button @click="loadAno()">Load</b-button>
+                    <b-col cols="2">
+                        <b-button @click="loadAno()" variant="success"><b-icon
+                                icon="journal-arrow-down"></b-icon></b-button>
+                    </b-col>
+                    <b-col cols="2">
+                        <b-button variant="warning" @click="$router.push('/MenuAdmin')" class="d-sm-hidden">
+                            <b-icon class="" icon="arrow-left-square" button>
+                            </b-icon>
+                        </b-button>
                     </b-col>
                 </b-row>
             </div>
@@ -29,7 +40,8 @@
                         <label> {{ j }} - {{ dado.nome }}</label>
                     </b-col>
                     <b-col col sm="3">
-                        <b-form-input v-model="dado.quant" :id="dado.nome + dado.id" :key="dado.id" type="number" align="right"></b-form-input>
+                        <b-form-input v-model="dado.quant" :id="dado.nome + dado.id" :key="dado.id" type="number"
+                            align="right"></b-form-input>
                     </b-col>
                 </b-row>
                 <div class="mt-4">
@@ -38,7 +50,12 @@
                     </b-row>
                 </div>
             </b-container>
-
+            <!-- <div class="fixed-bottom ml-auto">
+                <b-button variant="warning" size="sm" @click="$router.push('/MenuAdmin')">
+                    <b-icon class="" icon="arrow-left-square" button>
+                    </b-icon>
+                </b-button>
+            </div> -->
         </div>
 
     </div>
@@ -51,10 +68,7 @@ export default {
         return {
             inicio: false,
             promoters: [{ id: null, nome: null, meses: [{ mes: null, valor: null }] }],
-            pro: [
-                { id: 1, nome: 'Promotor 1', meses: [{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }] },
-                { id: 2, nome: 'Promotor 2', meses: [{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }] },
-            ],
+            filtar: {},
             anos: ['2023', '2024'],
             meses: [
                 { value: '01', text: 'Jan' },
@@ -81,6 +95,10 @@ export default {
         },
     },
     created() {
+        let now = new Date()
+        this.ano = now.getFullYear()
+        this.mes = String(now.getMonth() + 1).padStart(2, '0')
+        //console.log('PromotObj', this.ano, this.mes)
         //console.log(this.$store.state.login)
         // if (!this.$store.state.login.token) {
         //     this.$router.push(`/Login`)
@@ -93,7 +111,7 @@ export default {
         },
         salvar() {
             let savedata = this.promoters.map(v => { return { idpromoter: v.id, ano: this.ano, mes: this.mes, quant: v.quant, dtref: `${this.ano}-${this.mes}-01` } })
-            console.log(savedata)
+            //console.log(savedata)
             this.$store.state.loading = !this.$store.state.loading
             this.$http.post(`/objetivopromoter`, savedata)
                 .then(resp => {
@@ -112,25 +130,26 @@ export default {
             this.$http.get(`consulta?operacao=promoter`).then(res => {
                 this.promoters = res.data.filter(v => v.gestor === true).map(v => { return { id: v.id, nome: v.nome } })
                 // .map(v => {return {...v, meses:[{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }]}})
-                console.log(this.promoters)
+                //console.log(this.promoters)
                 this.$http.get(`consulta?operacao=objetivopromoter`).then(objpro => {
                     console.log(objpro.data)
                     let objetivo = objpro.data
                     let nummes = parseInt(this.mes, 10)
                     let numano = parseInt(this.ano, 10)
-                    
+
                     this.promoters = this.promoters.map((promo) => {
-                        let result = objetivo.filter((itemValor) => { return itemValor.idpromoter == promo.id && numano == itemValor.ano && nummes == itemValor.mes
+                        let result = objetivo.filter((itemValor) => {
+                            return itemValor.idpromoter == promo.id && numano == itemValor.ano && nummes == itemValor.mes
                             //itemValor.idpromoter === promo.id && numano === itemValor.ano && nummes === itemValor.mes
                             //console.log(itemValor.idpromoter === promo.id && numano === itemValor.ano && nummes === itemValor.mes ? itemValor : 'Nada')
                             // console.log( numano , itemValor.ano,  )
                         })
-                        console.log(result[0]  )
+                        //console.log(result[0])
                         return {
                             ...promo,
                             quant: result[0] ? result[0].quant : 0
                         }
-                        
+
 
                     })
                 })
@@ -151,5 +170,16 @@ export default {
 <style scoped>
 .promoterObjetivo {
     color: antiquewhite;
+}
+
+#cabecalho {
+    /* display: flex;
+    align-items: center; 
+    justify-content: center; */
+    border-radius: 10px;
+    border-color: white;
+    border-style: double;
+    padding: 5px;
+    margin: 1px;
 }
 </style>

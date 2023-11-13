@@ -6,8 +6,8 @@
                 <b-card-text>Lista o resultado de momento por promotores</b-card-text>
             </b-card>
 
-            <b-card  border-variant="secondary" header="Objeto" 
-            header-border-variant="secondary" align="center" @click="$router.push('/PromoterObjetivo')">
+            <b-card  border-variant="white" header="Objeto" header-bg-variant="success" header-text-variant="white"
+            header-border-variant="white" align="center" @click="$router.push('/PromoterObjetivo')">
                 <b-card-text>Manutenção de objetivo Mensal por Promotor.</b-card-text>
             </b-card>
         </b-card-group>
