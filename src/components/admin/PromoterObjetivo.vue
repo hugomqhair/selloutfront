@@ -145,6 +145,7 @@ export default {
                     })
 
                     this.promoters.sort((a, b) => a.nome.localeCompare(b.nome))
+                    // console.log(this.promoters)
                     this.$store.state.loading = false
 
                     //this.produtos.sort((a, b) => a.grupo.localeCompare(b.grupo))

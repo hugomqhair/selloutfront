@@ -57,29 +57,31 @@ export default {
         }
     },
     methods: {
-        Objetivo() {
-            this.mensal = this.mensal.map(val => {
-                let objetivoperiodo = ((val.qtdneg / val.objetivo) * 100).toFixed(2)
-                let diasperiodo = (val.dias / this.diasmes)
-                let objetivoper = (val.objetivo * diasperiodo)
-                let percperiodo = ((val.qtdneg / objetivoper) * 100).toFixed(0)
-                let cor
-                if (percperiodo < 60) {
-                    cor = 'text-danger'
-                } else if (percperiodo < 80) {
-                    cor = 'text-warning'
-                } else {
-                    cor = "text-success"
-                }
-                return { ...val, objetivoperiodo, percperiodo, cor }
-
-            })
-        },
+        // Objetivo() {
+        // },
         resultadoMensal() {
             this.$http.get(`consulta?operacao=resultadoAdmin`).then(res => {
                 this.mensal = res.data
-                this.Objetivo()
+                //this.Objetivo()
                 //this.optionsLojas = this.lojas.map(el => ({ value: el.id, text: el.nome }))
+                this.mensal = this.mensal.map(val => {
+                    val.objetivo = (val.objetivo === 0 ? 99 : val.objetivo)
+                    let objetivoperiodo = ((val.qtdneg / val.objetivo ) * 100).toFixed(2)
+                    let diasperiodo = (val.dias / this.diasmes)
+                    let objetivoper = (val.objetivo * diasperiodo)
+                    let percperiodo = ((val.qtdneg / objetivoper) * 100).toFixed(0)
+                    let cor
+                    if (percperiodo < 60) {
+                        cor = 'text-danger'
+                    } else if (percperiodo < 80) {
+                        cor = 'text-warning'
+                    } else {
+                        cor = "text-success"
+                    }
+                    return { ...val, objetivoperiodo, percperiodo, cor }
+        
+                })
+                //console.log(this.mensal)
             })
                 .catch(err => {
                     console.log('ERRO ***', err)
