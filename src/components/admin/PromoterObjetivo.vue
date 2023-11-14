@@ -1,7 +1,16 @@
 <template>
     <div class="promoterObjetivo">
         <b-row>
-            <h4 align="center">Manutenção de Objetivos</h4>
+            <b-col cols="2">
+                <b-button variant="warning" @click="$router.push('/MenuAdmin')" >
+                    <b-icon class="" icon="arrow-left-square" button>
+                    </b-icon>
+                </b-button>
+            </b-col>
+            <b-col cols="10">
+                <h4 align="center">Manutenção de Objetivos</h4>
+            </b-col>
+
         </b-row>
         <div>
             <!-- <filterAnoMes 
@@ -21,12 +30,6 @@
                         <b-button @click="loadAno()" variant="success"><b-icon
                                 icon="journal-arrow-down"></b-icon></b-button>
                     </b-col>
-                    <b-col cols="2">
-                        <b-button variant="warning" @click="$router.push('/MenuAdmin')" class="d-sm-hidden">
-                            <b-icon class="" icon="arrow-left-square" button>
-                            </b-icon>
-                        </b-button>
-                    </b-col>
                 </b-row>
             </div>
 
@@ -35,9 +38,9 @@
                     <b-col col lg="3" v-for="cab in promoters[0].meses" :key="cab.mes"><label> {{ cab.mes }}</label></b-col>
                 </b-row>
 
-                <b-row class="my-1" v-for="(dado, j) in promoters" :key="dado.id">
+                <b-row class="my-1" v-for="(dado) in promoters" :key="dado.id">
                     <b-col cols="4" col lg="3">
-                        <label> {{ j }} - {{ dado.nome }}</label>
+                        <label>{{ dado.nome }}</label>
                     </b-col>
                     <b-col col sm="3">
                         <b-form-input v-model="dado.quant" :id="dado.nome + dado.id" :key="dado.id" type="number"
@@ -50,12 +53,6 @@
                     </b-row>
                 </div>
             </b-container>
-            <!-- <div class="fixed-bottom ml-auto">
-                <b-button variant="warning" size="sm" @click="$router.push('/MenuAdmin')">
-                    <b-icon class="" icon="arrow-left-square" button>
-                    </b-icon>
-                </b-button>
-            </div> -->
         </div>
 
     </div>
@@ -100,11 +97,11 @@ export default {
         this.mes = String(now.getMonth() + 1).padStart(2, '0')
         //console.log('PromotObj', this.ano, this.mes)
         //console.log(this.$store.state.login)
-        // if (!this.$store.state.login.token) {
-        //     this.$router.push(`/Login`)
-        // } else {
-        //  this.consultaPromoter()
-        // }
+        if (!this.$store.state.login.token) {
+            this.$router.push(`/Login`)
+        } else {
+            this.consultaPromoter()
+        }
     },
     methods: {
         consultaPromoter() {
@@ -127,12 +124,12 @@ export default {
 
         },
         loadAno() {
+            this.$store.state.loading = !this.$store.state.loading
             this.$http.get(`consulta?operacao=promoter`).then(res => {
-                this.promoters = res.data.filter(v => v.gestor === true).map(v => { return { id: v.id, nome: v.nome } })
-                // .map(v => {return {...v, meses:[{ mes: 'Jan', valor: '' }, { mes: 'Feb', valor: '' }]}})
-                //console.log(this.promoters)
+                this.promoters = res.data.filter(v => v.gestor === false).map(v => { return { id: v.id, nome: v.nome } })
+
                 this.$http.get(`consulta?operacao=objetivopromoter`).then(objpro => {
-                    console.log(objpro.data)
+                    //console.log(objpro.data)
                     let objetivo = objpro.data
                     let nummes = parseInt(this.mes, 10)
                     let numano = parseInt(this.ano, 10)
@@ -140,18 +137,17 @@ export default {
                     this.promoters = this.promoters.map((promo) => {
                         let result = objetivo.filter((itemValor) => {
                             return itemValor.idpromoter == promo.id && numano == itemValor.ano && nummes == itemValor.mes
-                            //itemValor.idpromoter === promo.id && numano === itemValor.ano && nummes === itemValor.mes
-                            //console.log(itemValor.idpromoter === promo.id && numano === itemValor.ano && nummes === itemValor.mes ? itemValor : 'Nada')
-                            // console.log( numano , itemValor.ano,  )
                         })
-                        //console.log(result[0])
                         return {
                             ...promo,
                             quant: result[0] ? result[0].quant : 0
                         }
-
-
                     })
+
+                    this.promoters.sort((a, b) => a.nome.localeCompare(b.nome))
+                    this.$store.state.loading = false
+
+                    //this.produtos.sort((a, b) => a.grupo.localeCompare(b.grupo))
                 })
                 this.inicio = true
             }).catch(err => {

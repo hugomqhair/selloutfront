@@ -1,14 +1,24 @@
 <template>
     <div class="resultadoMensalAdmin">
-        <h6>Objetivo Mensal, (considerando {{ diasmes }} dias)</h6>
+        <b-row>
+            <b-col cols="2">
+                <b-button variant="warning" @click="$router.push('/MenuAdmin')" class="d-sm-hidden">
+                    <b-icon class="" icon="arrow-left-square" button>
+                    </b-icon>
+                </b-button>
+            </b-col>
+            <b-col cols="10">
+                <h6>Objetivo Mensal, (considerando {{ diasmes }} dias)</h6>
+            </b-col>
+        </b-row>
         <div>
-            <b-table table-variant="light" head-variant="dark" striped outlined :items="mensal" :fields="fields">
+            <b-table table-variant="light" head-variant="dark" striped outlined :items="mensal" :fields="fields" small>
                 <template #cell(percperiodo)="data">
                     <b :class="data.item.cor">{{ data.value }}</b>
                 </template>
                 <template #cell(objetivoperiodo)="data">
                     <b :class="data.item.cor">{{ data.value }}</b>
-                </template>                
+                </template>
             </b-table>
         </div>
 
@@ -22,12 +32,12 @@ export default {
         return {
             mensal: [],
             fields: [
-                 { key: "promoter", label: "Promoter", sortable: true }
-                ,{ key: "qtdneg", label: "Qtd", sortable: true }
-                ,{key:"dias", label:"Dias", sortable:true}
-                ,{key:"objetivo", label:"Objetivo", sortable:true}
-                ,{ key: "objetivoperiodo", label: "% Mês" }
-                ,{ key: "percperiodo", label: "% Dia" }
+                { key: "promoter", label: "Promoter", sortable: true }
+                , { key: "qtdneg", label: "Qtd", sortable: true }
+                , { key: "dias", label: "Dias", sortable: true }
+                , { key: "objetivo", label: "Objetivo", sortable: true }
+                , { key: "objetivoperiodo", label: "% Mês" }
+                // , { key: "percperiodo", label: "% Dia" }
             ],
             // objetivo: 80,
             diasmes: 25
