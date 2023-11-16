@@ -1,6 +1,6 @@
 <template>
     <div class="resultadoMensal">
-        <h6>Objetivo Mensal {{ objetivo }}, considerando {{ diasmes }} dias</h6>
+        <h6>Objetivo Mensal, considerando {{ diasmes }} dias</h6>
 
         <b-card-group class="justify-content-between align-items-center mt-1" columns>
             <b-card v-for="mes in mensal" :key="mes.mes" border-variant="light" :header="mes.mes" header-bg-variant="dark"
