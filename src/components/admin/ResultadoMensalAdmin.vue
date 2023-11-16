@@ -122,6 +122,7 @@ export default {
         // Objetivo() {
         // },
         resultadoMensal() {
+            this.$store.state.loading = !this.$store.state.loading
             this.$http.get(`consulta?operacao=resultadoAdmin`).then(res => {
                 this.mensal = res.data
                 //this.Objetivo()
@@ -144,11 +145,8 @@ export default {
                         cor = "text-success"
                     }
                     return { ...val, objetivoperiodo, percperiodo, cor }
-
                 })
-                console.log('objetivoTotal', this.objetivoTotal)
-                console.log('quantTotal', this.quantTotal)
-                console.log('Dias', this.diasTrabalhados, this.mensal.length, 'Calc:',this.diasTrabalhados/this.mensal.length )
+                this.$store.state.loading = !this.$store.state.loading
             })
                 .catch(err => {
                     console.log('ERRO ***', err)

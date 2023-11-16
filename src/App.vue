@@ -7,7 +7,7 @@
     </b-container>
     <!-- Snipper -->
     <div v-if="loading" id="loading">
-      <b-spinner style="width: 10rem; height: 10rem;" label="Large Spinner" variant="success"></b-spinner>
+      <b-spinner style="width: 10rem; height: 10rem;" label="Carregando..." variant="success"></b-spinner>
     </div>
   </div>
 </template>
@@ -63,11 +63,13 @@ body {
 #loading{
     position: fixed;
     top: 40%;
-    right: 50%;
+    right: 45%;
+    /* transform: translate(-50%, -50%); */
     opacity: 0.8;
+    /* color: bisque; */
 
  @media (max-width: 800px) {
-  right: 40%;
+  right: 35%;
   top: 30%;
 }
 
