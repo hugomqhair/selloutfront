@@ -196,7 +196,8 @@ export default {
         salvarVenda() {
             this.$store.state.loading = !this.$store.state.loading
             this.produtos = this.produtos.concat(this.semcadastro)
-            let salvaItens = this.produtos.filter(v => { return v.qtdneg > 0 || v.semestoque !== v.cpsemestoque || v.semcadastro !== v.cpsemcadastro })
+            //cpsemestoque, cpsemcadastro e cpqtdneg, é uma copia do valor para saber se precisa salvar ou não
+            let salvaItens = this.produtos.filter(v => { return v.qtdneg > 0 || v.semestoque !== v.cpsemestoque || v.semcadastro !== v.cpsemcadastro || v.qtdneg !== v.cpqtdneg })
             salvaItens = salvaItens.map(obj => ({ idsellout: this.selloutid, idproduto: obj.idproduto, qtdneg: obj.qtdneg, semcadastro: obj.semcadastro, semestoque: obj.semestoque }))
             this.$http.post(`/insertSelloutItem`, salvaItens)
                 .then(resp => {
@@ -213,8 +214,8 @@ export default {
             //console.log('Token', localStorage.getItem('MQToken'))
             this.$http.get(`loadSelloutitem?idsellout=${idsellout}`).then(res => {
                 //console.log(res.data)
-                this.produtos = res.data.filter(item => item.semcadastro == false).map(item => { return { ...item, cpsemestoque: item.semestoque, cpsemcadastro: item.semcadastro } })
-                this.semcadastro = res.data.filter(item => item.semcadastro == true).map(item => { return { ...item, cpsemestoque: item.semestoque, cpsemcadastro: item.semcadastro } })
+                this.produtos = res.data.filter(item => item.semcadastro == false).map(item => { return { ...item, cpsemestoque: item.semestoque, cpsemcadastro: item.semcadastro, cpqtdneg: item.qtdneg } })
+                this.semcadastro = res.data.filter(item => item.semcadastro == true).map(item => { return { ...item, cpsemestoque: item.semestoque, cpsemcadastro: item.semcadastro, cpqtdneg: item.qtdneg } })
                 this.$store.state.loading = false
             })
         },
@@ -339,4 +340,5 @@ export default {
         opacity: 0;
     }
 
-}</style>
+}
+</style>

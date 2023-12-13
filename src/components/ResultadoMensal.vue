@@ -7,9 +7,10 @@
                 header-text-variant="success" align="center">
                 <b-card-text>
                     <h4>
-                        <b-badge :variant="mes.objetivo == '99' ? 'dark' : 'success'" id="qtdneg">{{ mes.objetivo }}</b-badge>
+                        <b-badge :variant="mes.objetivo == '99' ? 'dark' : 'success'" id="qtdneg">{{ mes.objetivo
+                        }}</b-badge>
                     </h4>
-                    <b-badge :variant="mes.cor" class="mb-2" >{{ mes.percperiodo }}% média diaria</b-badge>
+                    <b-badge :variant="mes.cor" class="mb-2">{{ mes.percperiodo }}% média Projetada</b-badge>
                     <div class="mt-2">
                         <span class="texto">% Objetivo Mensal</span>
                     </div>
@@ -38,7 +39,7 @@ export default {
                 { mes: "Jun/2023", qtdneg: 16, dias: 3 }
             ],
             objetivo: 80,
-            diasmes: 25
+            diasmes: 26
         }
     },
     computed: {
@@ -98,7 +99,7 @@ export default {
     color: antiquewhite;
 }
 
-span.texto{
+span.texto {
     color: black;
     font-size: small;
 }

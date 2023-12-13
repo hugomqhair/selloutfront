@@ -5,7 +5,7 @@ import axios from 'axios'
 // axios.defaults.headers.common['Authorization'] = 'abc123'
 // axios.defaults.headers.get['Accepts'] = 'application/json'
 
-console.log('Ambiente', process.env, process.env.NODE_ENV == 'development')
+//console.log('Ambiente', process.env, process.env.NODE_ENV == 'development')
 
 Vue.use({
     install(Vue) {

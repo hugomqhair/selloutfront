@@ -4,13 +4,13 @@ import App from './App.vue'
 import router from './router'
 import store from './store/store'
 
-import filterAnoMes from './components/small/filterAnoMes.vue'
+import filtroPadro from './components/small/filtroPadro.vue'
 
 import './plugins/bootstrap-vue'
 import './plugins/axios'
 
 Vue.config.productionTip = false
-Vue.component('filterAnoMes', filterAnoMes)
+Vue.component('filtroPadro', filtroPadro)
 
 new Vue({
   router,
