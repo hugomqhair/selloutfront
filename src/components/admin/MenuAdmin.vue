@@ -10,6 +10,11 @@
             header-border-variant="white" align="center" @click="$router.push('/PromoterObjetivo')">
                 <b-card-text>Manutenção de objetivo Mensal por Promotor.</b-card-text>
             </b-card>
+
+            <b-card  border-variant="white" header="Produtos" header-bg-variant="secondary" header-text-variant="white"
+            header-border-variant="white" align="center" @click="$router.push('/Produtos')">
+                <b-card-text>Manutenção de Produtos</b-card-text>
+            </b-card>
         </b-card-group>
     </div>
 </template>

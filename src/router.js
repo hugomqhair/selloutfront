@@ -7,6 +7,7 @@ import ResultadoMensal from "./components/ResultadoMensal.vue"
 import ResultadoMensalAdmin from "./components/admin/ResultadoMensalAdmin.vue"
 import MenuAdmin from "./components/admin/MenuAdmin.vue"
 import PromoterObjetivo from "./components/admin/PromoterObjetivo.vue"
+import Produtos from "./components/admin/Produtos.vue"
 
 
 import Teste from "./components/Teste.vue"
@@ -24,5 +25,6 @@ export default new Router({
         ,{path:'/Teste', component: Teste}
         ,{path:'/MenuAdmin', component: MenuAdmin}
         ,{path:'/PromoterObjetivo', component: PromoterObjetivo}
+        ,{path:'/Produtos', component: Produtos}
     ]
 })
