@@ -40,23 +40,30 @@
                         </div>
                     </b-card-text>
                     <template #footer>
-                        <div id="popover-mediaDiasGeral">
-                            <b-icon icon="exclamation-circle" scale="1" variant="info"></b-icon>
-                            <em>Média dias geral {{ mediaDiasGeral }}</em>
-                            <b-popover target="popover-mediaDiasGeral" triggers="hover" placement="top">
-                                <template #title>Como foi calculado?</template>
-                                Somando o Total de dias de cada promotor e dividindo pelo total de promotores
-                                <br><em>Dia Trabalhados: </em><b>{{ diasTrabalhados }}</b>
-                                <br><em>Total Promotores: </em>{{ mensal.length }}
-                                <br><em>Resultado arredondado: </em><b>{{ mediaDiasGeral }}</b>
-                            </b-popover>
-                        </div>
+                        <b-row>
+                            <b-col cols="6">
+                                <div id="popover-mediaDiasGeral">
+                                    <b-icon icon="exclamation-circle" scale="1" variant="info"></b-icon>
+                                    <em>Média dias geral {{ mediaDiasGeral }}</em>
+                                    <b-popover target="popover-mediaDiasGeral" triggers="hover" placement="top">
+                                        <template #title>Como foi calculado?</template>
+                                        Somando o Total de dias de cada promotor e dividindo pelo total de promotores
+                                        <br><em>Dia Trabalhados: </em><b>{{ diasTrabalhados }}</b>
+                                        <br><em>Total Promotores: </em>{{ mensal.length }}
+                                        <br><em>Resultado arredondado: </em><b>{{ mediaDiasGeral }}</b>
+                                    </b-popover>
+                                </div>
+                            </b-col>
+                            <b-col cols="6">
+                                <b-button variant="info" @click="download">Baixar</b-button>
+                            </b-col>
+                        </b-row>
                     </template>
                 </b-card>
             </b-card-group>
             <!-- </b-col> -->
         </b-row>
-        <div>
+        <div id="tabelaMensal">
             <b-table table-variant="light" head-variant="dark" striped outlined :items="mensal" :fields="fields" small
                 select-mode="single" selectable @row-selected="selectPromoter">
                 <template #cell(percperiodo)="data">
@@ -108,7 +115,7 @@ export default {
                 { key: "promoter", label: "Promoter", sortable: true }
                 , { key: "qtdneg", label: "Qtd", sortable: true, class: "text-right" }
                 , { key: "dias", label: "Dias", sortable: true, class: "text-right" }
-                , { key: "objetivo", label: "Objetivo", sortable: true, class: "text-right" }
+                , { key: "objetivo", label: "Obj", sortable: true, class: "text-right" }
                 , { key: "objetivoperiodo", label: "% Mês", sortable: true, class: "text-right" }
                 , { key: "vlrcurva", label: "Curva", sortable: true, class: "text-right" }
 
@@ -293,6 +300,23 @@ export default {
                 })
             this.curvaacc = curvaacc
             //console.log('detalhe', this.mensalDetalhePromoter)
+        },
+        download(){
+            console.log('clicou')
+            let csvContent = this.convertToCSV()
+            const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8'})
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download','mensal_detalhe.csv')
+        },
+        convertToCSV(){
+            let headers = Object.keys(this.mensalDetalhe[0])
+            let rows = this.mensalDetalhe.map(obj => headers.map(header => obj[header]))
+            let headerRow = headers.join(',')
+            let csvRows = [headerRow, ...rows.map(row => row.join(','))]
+            console.log(this.mensalDetalhe)
+            return csvRows.join('\n')
         }
 
     },
@@ -309,5 +333,9 @@ export default {
 
 #detalhepromoter {
     font-size: 0.75em;
+}
+
+#tabelaMensal{
+    font-size: 0.85em;
 }
 </style>
