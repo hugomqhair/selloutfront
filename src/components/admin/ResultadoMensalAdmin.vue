@@ -165,24 +165,24 @@ export default {
         }
     },
     created() {
-        //VOLTAR esse código
         //console.log(this.$store.state.login)
-        // if (!this.$store.state.login.token) {
-        //     this.$router.push(`/Login`)
-        // } else {
-        //     let now = new Date()
-        //     this.filtros.ano = now.getFullYear()
-        //     this.filtros.mes = String(now.getMonth() + 1).padStart(2, '0')
-        // }
-        let now = new Date()
-        this.filtros.ano = now.getFullYear()
-        this.filtros.mes = String(now.getMonth() + 1).padStart(2, '0')
+        if (!this.$store.state.login.token) {
+            this.$router.push(`/Login`)
+        } else {
+            let now = new Date()
+            this.filtros.ano = now.getFullYear()
+            this.filtros.mes = String(now.getMonth() + 1).padStart(2, '0')
+        }
+        // let now = new Date()
+        // this.filtros.ano = now.getFullYear()
+        // this.filtros.mes = String(now.getMonth() + 1).padStart(2, '0')
 
     },
     methods: {
         // Objetivo() {
         // },
         resultadoMensal() {
+            //this.$refs['detalhepromoter'].hide()
             this.$store.state.loading = !this.$store.state.loading
             //console.log('filtros', this.filtros)
             this.$http.get(`consulta?operacao=resultadoAdmin&ano=${this.filtros.ano}&mes=${this.filtros.mes}`).then(res => {
@@ -210,28 +210,36 @@ export default {
                     return { ...val, objetivoperiodo, percperiodo, cor }
                 })
                 // Carregando detalhe por promoter
-                this.$http.get(`consulta?operacao=resultadoAdminDetalhe&ano=${this.filtros.ano}&mes=${this.filtros.mes}`).then(res => {
+                this.$http.get(`consulta?operacao=resultadoAdminDetalhe&ano=${this.filtros.ano}&mes=${this.filtros.mes}`).then(async res => {
                     //console.log('Detalhe', res.data)
-                    this.mensalDetalhe = res.data
-                    let curvaacc
-                    let vlrcurva
+                    this.mensalDetalhe = await res.data
+                    this.mensalDetalhe = this.mensalDetalhe.map(vdet => {
+                        let vlrcurva = 0
+                        //let curvaacc = 0
+                        let { objetivoperiodo } = this.mensal.find(filt => filt.promoter === vdet.promoter)
+
+                        if (parseFloat(objetivoperiodo) >= 85 && parseFloat(objetivoperiodo) < 95) {
+                            vlrcurva = (vdet.tipo === 'A' ? 1 : 0.75) * vdet.qtdneg
+                        } else if (parseFloat(objetivoperiodo) >= 95 && parseFloat(objetivoperiodo) < 100) {
+                            vlrcurva = (vdet.tipo === 'A' ? 1.5 : 1) * vdet.qtdneg
+                        } else if (parseFloat(objetivoperiodo) >= 100) {
+                            vlrcurva = (vdet.tipo === 'A' ? 2 : 1.5) * vdet.qtdneg
+                        }
+
+                        return { ...vdet, vlrcurva: vlrcurva }
+                    })
+                    console.log('det', this.mensalDetalhe)
+                    //Somando curva para a tabela principal (mensal)
                     this.mensal = this.mensal.map(v => {
-                        curvaacc = 0
-                        vlrcurva = 0
-                        this.mensalDetalhe.filter(filt => filt.promoter === v.promoter).forEach(vdet => {
-                            //console.log(v.promoter === vdet.promoter ? v.promoter +' - '+  vdet.promoter : null)
-                            if (parseFloat(v.objetivoperiodo) >= 85 && parseFloat(v.objetivoperiodo) < 95) {
-                                vlrcurva = (vdet.tipo === 'A' ? 1 : 0.75) * vdet.qtdneg
-                            } else if (parseFloat(v.objetivoperiodo) >= 95 && parseFloat(v.objetivoperiodo) < 100) {
-                                vlrcurva = (vdet.tipo === 'A' ? 1.5 : 1) * vdet.qtdneg
-                            } else if (parseFloat(v.objetivoperiodo) >= 100) {
-                                vlrcurva = (vdet.tipo === 'A' ? 2 : 1.5) * vdet.qtdneg
-                            }
-                            curvaacc += vlrcurva
-                        })
-                        //console.log('curva', curvaacc)
+                        let curvaacc = 0
+                        curvaacc = this.mensalDetalhe.filter(filt => filt.promoter === v.promoter)
+                            .reduce((acc, val) => {
+                                acc += parseFloat(val.vlrcurva)
+                                return acc
+                            }, 0)
                         return { ...v, vlrcurva: curvaacc.toFixed(2) }
                     })
+
                 })
 
                 this.$store.state.loading = !this.$store.state.loading
@@ -240,32 +248,6 @@ export default {
                     console.log('ERRO ***', err)
                     this.$store.state.mensagens = [{ texto: 'Falha de Servidor, informar ao TI', tipo: 'danger', tempo: 5, dismissCountDown: 0 }]
                 })
-
-            // // Carregando detalhe por promoter
-            // this.$http.get(`consulta?operacao=resultadoAdminDetalhe&ano=${this.filtros.ano}&mes=${this.filtros.mes}`).then(res => {
-            //     console.log('Detalhe', res.data)
-            //     this.mensalDetalhe = res.data
-            //     let curvaacc
-            //     let vlrcurva
-            //     this.mensal = this.mensal.map(v => {
-            //         curvaacc = 0
-            //         vlrcurva = 0
-            //         this.mensalDetalhe.filter(filt => filt.promoter === v.promoter).forEach(vdet => {
-            //             //console.log(v.promoter === vdet.promoter ? v.promoter +' - '+  vdet.promoter : null)
-            //                 if(parseFloat(v.objetivoperiodo)>=85 && parseFloat(v.objetivoperiodo) < 95 ){
-            //                     vlrcurva = (vdet.tipo === 'A' ? 1 : 0.75) * vdet.qtdneg
-            //                 } else if (parseFloat(v.objetivoperiodo)>=95 && parseFloat(v.objetivoperiodo)<100 ){
-            //                     vlrcurva = (vdet.tipo === 'A' ? 1.5 : 1) * vdet.qtdneg
-            //                 } else if (parseFloat(v.objetivoperiodo)>=100){
-            //                     vlrcurva = (vdet.tipo === 'A' ? 2 : 1.5) * vdet.qtdneg
-            //                 }
-            //                 curvaacc += vlrcurva
-            //         })
-            //         //console.log('curva', curvaacc)
-            //         return {...v, vlrcurva: curvaacc.toFixed(2)}
-            //     })
-            // })
-            //resultadoAdminDetalhe
 
         },
 
@@ -277,40 +259,30 @@ export default {
 
         },
         selectPromoter(items) {
-            // console.log('Selecionou', items)
+            //console.log('Selecionou', items)
             this.detalhepromoter = items
             this.$refs['detalhepromoter'].show()
             this.detalhepromoter = items[0].promoter
             this.detalheobj = items[0].objetivoperiodo
-            //console.log(this.detalhepromoter, this.detalheobj)
-            let curvaacc = 0
+
             this.mensalDetalhePromoter = this.mensalDetalhe.filter(v => v.promoter === items[0].promoter)
                 .map(v => {
-                    let vlrcurva = 0
-                    //console.log('% float', parseFloat(items[0].objetivoperiodo))
-                    if (parseFloat(items[0].objetivoperiodo) >= 85 && parseFloat(items[0].objetivoperiodo) < 95) {
-                        vlrcurva = (v.tipo === 'A' ? 1 : 0.75) * v.qtdneg
-                    } else if (parseFloat(items[0].objetivoperiodo) >= 95 && parseFloat(items[0].objetivoperiodo) < 100) {
-                        vlrcurva = (v.tipo === 'A' ? 1.5 : 1) * v.qtdneg
-                    } else if (parseFloat(items[0].objetivoperiodo) >= 100) {
-                        vlrcurva = (v.tipo === 'A' ? 2 : 1.5) * v.qtdneg
-                    }
-                    curvaacc += vlrcurva
-                    return { ...v, dia: v.dtmov.substr(8, 2), vlrcurva: vlrcurva.toFixed(2) }
+                    return { ...v, dia: v.dtmov.substr(8, 2), vlrcurva: v.vlrcurva.toFixed(2) }
                 })
-            this.curvaacc = curvaacc
+            this.curvaacc = items[0].vlrcurva
             //console.log('detalhe', this.mensalDetalhePromoter)
         },
-        download(){
+        download() {
             console.log('clicou')
             let csvContent = this.convertToCSV()
-            const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8'})
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
             const url = URL.createObjectURL(blob)
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download','mensal_detalhe.csv')
+            link.setAttribute('download', 'mensal_detalhe.csv')
+            link.click()
         },
-        convertToCSV(){
+        convertToCSV() {
             let headers = Object.keys(this.mensalDetalhe[0])
             let rows = this.mensalDetalhe.map(obj => headers.map(header => obj[header]))
             let headerRow = headers.join(',')
@@ -335,7 +307,7 @@ export default {
     font-size: 0.75em;
 }
 
-#tabelaMensal{
+#tabelaMensal {
     font-size: 0.85em;
 }
 </style>
