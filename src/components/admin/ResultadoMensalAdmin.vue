@@ -41,10 +41,10 @@
                     </b-card-text>
                     <template #footer>
                         <b-row>
-                            <b-col cols="6">
+                            <b-col cols="4">
                                 <div id="popover-mediaDiasGeral">
                                     <b-icon icon="exclamation-circle" scale="1" variant="info"></b-icon>
-                                    <em>Média dias geral {{ mediaDiasGeral }}</em>
+                                    <em> Média dias geral {{ mediaDiasGeral }}</em>
                                     <b-popover target="popover-mediaDiasGeral" triggers="hover" placement="top">
                                         <template #title>Como foi calculado?</template>
                                         Somando o Total de dias de cada promotor e dividindo pelo total de promotores
@@ -54,7 +54,18 @@
                                     </b-popover>
                                 </div>
                             </b-col>
-                            <b-col cols="6">
+                            <b-col cols="4">
+                                <div id="popover-calculoCurva">
+                                    <b-icon icon="exclamation-circle" scale="1" variant="info"></b-icon>
+                                    <em> Cálculo da Curva</em>
+                                    <b-popover target="popover-calculoCurva" triggers="hover" placement="top">
+                                            <template #title>Como foi calculado?</template>
+                                            <b-table table-variant="light" small head-variant="dark" striped outlined :items="popoverFaixa">
+                                            </b-table>
+                                    </b-popover>
+                                </div>
+                            </b-col>
+                            <b-col cols="4">
                                 <b-button variant="info" @click="download">Baixar</b-button>
                             </b-col>
                         </b-row>
@@ -126,6 +137,12 @@ export default {
                 { key: "qtdneg", label: "Qtd", sortable: true, class: "text-right" },
                 { key: "tipo", label: "Curva", sortable: true, class: "text-center" },
                 { key: "vlrcurva", label: "Vlr Curva", sortable: true, class: "text-right" },
+            ],
+            popoverFaixa:[
+                {Faixa:'<__85%', A:'0,00', B:'0,00'},
+                {Faixa:'85__95%', A:'1,00', B:'0,75'},
+                {Faixa:'95__100%', A:'1,50', B:'1,00'},
+                {Faixa:'>= 100%', A:'2,00', B:'1,50'},
             ],
             // objetivo: 80,
             diasmes: 26,
