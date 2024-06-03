@@ -19,14 +19,14 @@
 export default {
     data() {
         return {
-            anos: ['2023', '2024'],
+            anos: ['2023', '2024','2025'],
             meses: [
                 { value: '01', text: 'Jan' },
                 { value: '02', text: 'Fev' },
                 { value: '03', text: 'Mar' },
                 { value: '04', text: 'Abr' },
                 { value: '05', text: 'Mai' },
-                { value: '06', text: 'Jul' },
+                { value: '06', text: 'Jun' },
                 { value: '07', text: 'Jul' },
                 { value: '08', text: 'Ago' },
                 { value: '09', text: 'Set' },

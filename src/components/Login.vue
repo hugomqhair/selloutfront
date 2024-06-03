@@ -45,7 +45,11 @@ export default {
                     //console.log('resp', resp)
                     this.$store.commit('setUser', { id: resp.data.id, usuario: resp.data.usuario, token: resp.data.token, gestor:resp.data.gestor})
                     localStorage.setItem('MQToken', JSON.stringify(resp.data.token))
-                    this.$router.push('/')
+                    if(resp.data.gestor){
+                        this.$router.push('/MenuAdmin')    
+                    } else {
+                        this.$router.push('/')
+                    }
                     this.$store.state.loading = !this.$store.state.loading
                 }).catch(err => {
                     //console.log('Erro Login', err)

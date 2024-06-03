@@ -140,7 +140,7 @@ export default {
             ],
             popoverFaixa:[
                 {Faixa:'<__85%', A:'0,00', B:'0,00'},
-                {Faixa:'85__95%', A:'1,00', B:'0,75'},
+                {Faixa:'85__95%', A:'1,00', B:'0,70'},
                 {Faixa:'95__100%', A:'1,50', B:'1,00'},
                 {Faixa:'>= 100%', A:'2,00', B:'1,50'},
             ],
@@ -236,7 +236,7 @@ export default {
                         let { objetivoperiodo } = this.mensal.find(filt => filt.promoter === vdet.promoter)
 
                         if (parseFloat(objetivoperiodo) >= 85 && parseFloat(objetivoperiodo) < 95) {
-                            vlrcurva = (vdet.tipo === 'A' ? 1 : 0.75) * vdet.qtdneg
+                            vlrcurva = (vdet.tipo === 'A' ? 1 : 0.7) * vdet.qtdneg
                         } else if (parseFloat(objetivoperiodo) >= 95 && parseFloat(objetivoperiodo) < 100) {
                             vlrcurva = (vdet.tipo === 'A' ? 1.5 : 1) * vdet.qtdneg
                         } else if (parseFloat(objetivoperiodo) >= 100) {
