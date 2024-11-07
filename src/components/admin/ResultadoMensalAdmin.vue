@@ -94,12 +94,11 @@
             <!-- <p class="my-4">Objetivo Atual: {{detalheobj}}%</p> -->
             <b-col class="m-2">
                 <b-badge variant="success">Objetivo: <b-badge variant="light">{{ detalheobj }} %</b-badge></b-badge>
-                <b-badge variant="success" class="ml-3">Total Curva: <b-badge variant="light">R$ {{ curvaacc }}
-                    </b-badge></b-badge>
-
+                <b-badge variant="success" class="ml-3">Total Curva: <b-badge variant="light">R$ {{ curvaacc }}</b-badge></b-badge>
+                <p id="detalhepromoter">Clique na linha do dia que deseja alterar</p>
             </b-col>
             <b-table table-variant="light" head-variant="dark" striped outlined :items="mensalDetalhePromoter"
-                :fields="fieldsDetalhe" small id="detalhepromoter">
+                :fields="fieldsDetalhe" small id="detalhepromoter" select-mode="single" selectable @row-selected="editarSellout">
                 <template #cell(descrprod)="data">
                     <span>{{ data.value }}</span>
                 </template>
@@ -245,7 +244,7 @@ export default {
 
                         return { ...vdet, vlrcurva: vlrcurva }
                     })
-                    console.log('det', this.mensalDetalhe)
+                    //console.log('det', this.mensalDetalhe)
                     //Somando curva para a tabela principal (mensal)
                     this.mensal = this.mensal.map(v => {
                         let curvaacc = 0
@@ -289,8 +288,17 @@ export default {
             this.curvaacc = items[0].vlrcurva
             //console.log('detalhe', this.mensalDetalhePromoter)
         },
+        editarSellout(items){
+            console.log('editarSellout', items[0], `${items[0].dtmov.substring(8,10)}/${items[0].dtmov.substring(5,7)}/${items[0].dtmov.substring(0,4)}`)
+            this.$store.state.loading = !this.$store.state.loading
+            this.$router.push(`/SelloutItem/${items[0].id}`)
+            //console.log(loja, data_selected)
+            this.$store.state.selectLoja = items[0].loja
+            this.$store.state.selectData = `${items[0].dtmov.substring(8,10)}/${items[0].dtmov.substring(5,7)}/${items[0].dtmov.substring(0,4)}`
+
+        },
         download() {
-            console.log('clicou')
+            //console.log('clicou')
             let csvContent = this.convertToCSV()
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
             const url = URL.createObjectURL(blob)
@@ -304,7 +312,7 @@ export default {
             let rows = this.mensalDetalhe.map(obj => headers.map(header => obj[header]))
             let headerRow = headers.join(',')
             let csvRows = [headerRow, ...rows.map(row => row.join(','))]
-            console.log(this.mensalDetalhe)
+            //console.log(this.mensalDetalhe)
             return csvRows.join('\n')
         }
 

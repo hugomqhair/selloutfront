@@ -1,7 +1,10 @@
 <template>
     <div id="login">
-        <b-card title="Login" bg-variant="dark">
-            <div>
+        <div  v-if="boqueio">
+            <h1>Sistema em Manutenção</h1>
+        </div>
+        <b-card v-else title="Login" bg-variant="dark">
+            <div >
                 <span>Usuário</span>
                 <b-form-input v-model="usuario" name="usuario" type="text"></b-form-input>
                 <span>Senha</span>
@@ -25,7 +28,8 @@ export default {
     data() {
         return {
             usuario:'',
-            senha:''
+            senha:'',
+            boqueio:true
         }
     },
     computed: {
