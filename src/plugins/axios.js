@@ -11,7 +11,7 @@ Vue.use({
     install(Vue) {
         // Vue.prototype.$http = axios
         Vue.prototype.$http = axios.create({
-            baseURL: process.env.NODE_ENV == 'development' ? '/mqhair-sellout/us-central1/' : `-dpq5ulisja-uc.a.run.app/mqhair-sellout/us-central1/`,  //35.184.93.99 Externo
+            baseURL: process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:5001/mqhair-sellout/us-central1/app' : `https://app-dpq5ulisja-uc.a.run.app/`,  //Amazon: 35.184.93.99 Externo
             //baseURL: 'http://localhost:3000/',
             headers: {
                 "Authorization": "abc123"
@@ -19,14 +19,6 @@ Vue.use({
         })
 
         Vue.prototype.$http.interceptors.request.use(config => {
-            if (process.env.NODE_ENV == 'development'){
-                console.log('http: ', config.baseURL, config.url, config)
-                config.baseURL = `http://127.0.0.1:5001${config.baseURL}`
-            }else{
-                console.log(`https:/${config.url}${config.baseURL}`)
-                let urldestino = config.url.substring(0,1) === '/' ? config.url.substring(1) : config.url
-                config.baseURL = `https://${urldestino}${config.baseURL}`
-            } 
             //console.log(this.$store.login)
             // if(config.method == 'post') {
             //     config.method = 'put'

@@ -29,7 +29,7 @@ export default {
         return {
             usuario:'',
             senha:'',
-            boqueio:true
+            boqueio:false
         }
     },
     computed: {
