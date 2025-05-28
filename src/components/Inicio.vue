@@ -31,6 +31,9 @@
               {{ sellout.loja }}
               <b-avatar variant="success" icon="box-arrow-in-up-right" class="ml-3" button
                 @click="selloutitem(sellout.id, sellout.loja,sellout.fmt_dtmov )"></b-avatar>
+              
+              <b-avatar :variant=" sellout.idshoppreco ? 'primary' : 'dark'"  icon="currency-dollar" class="ml-3" button
+                @click="shoppreco(sellout.idshoppreco, sellout.idloja,sellout.dtmov, sellout.loja,sellout.fmt_dtmov )"></b-avatar>
             </b-card-text>
           </b-card>
         </b-card-group>
@@ -96,7 +99,7 @@ export default {
     obterSellouts() {
       this.$http.get(`obterSellouts?idpromoter=${this.login.id}`).then(res => {
         this.sellouts = res.data
-        //console.log(this.sellouts)
+        console.log(this.sellouts)
       }).catch(err => {
         console.log(err)
         this.$store.state.mensagens = [{ texto: 'Falha de Servidor(obterSellouts), informar ao TI', tipo: 'danger', tempo: 0, dismissCountDown: 0 }]
@@ -109,6 +112,33 @@ export default {
       //console.log(loja, data_selected)
       this.$store.state.selectLoja = loja
       this.$store.state.selectData = data_selected
+    },
+    shoppreco(idshopreco, idloja, dtmov , loja, data_selected) {
+      console.log('shoppreco', idshopreco, idloja, dtmov)
+      this.$store.state.loading = !this.$store.state.loading
+      if(idshopreco == null){
+          let insShoppreco = { idpromoter: this.login.id, idloja: idloja, dtmov: dtmov }
+          const metodo = 'post'
+          this.$http[metodo](`/insertShoppreco`, insShoppreco)
+            .then(resp => {
+              console.log(resp)
+              if(resp){
+                this.obterSellouts()
+                this.$store.state.mensagens = [{ texto: resp.data, tipo: 'success', tempo: 3, dismissCountDown: 0 }]  
+                this.$store.state.loading = !this.$store.state.loading
+              }
+            }).catch(err => {
+              this.$store.state.mensagens = [{ texto: 'Falha de Servidor (confirmaShoppreco), informar ao TI \n'+err.response.data, tipo: 'danger', tempo: 5, dismissCountDown: 0 }]  
+              this.$store.state.loading = false
+            })
+      } else{
+        console.log('shoppreco ja cadastrado', idshopreco, idloja, dtmov)
+        this.$router.push(`/ShopPrecoProduto/${idshopreco}`)
+      //console.log(loja, data_selected)
+        this.$store.state.selectLoja = loja
+        this.$store.state.selectData = data_selected
+        this.$store.state.loading = !this.$store.state.loading
+      }
     }
   },
   created() {

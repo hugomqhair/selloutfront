@@ -8,6 +8,7 @@ import ResultadoMensalAdmin from "./components/admin/ResultadoMensalAdmin.vue"
 import MenuAdmin from "./components/admin/MenuAdmin.vue"
 import PromoterObjetivo from "./components/admin/PromoterObjetivo.vue"
 import Produtos from "./components/admin/Produtos.vue"
+import ShopPrecoProduto from "./components/ShopPrecoProduto.vue"
 
 
 import Teste from "./components/Teste.vue"
@@ -26,5 +27,6 @@ export default new Router({
         ,{path:'/MenuAdmin', component: MenuAdmin}
         ,{path:'/PromoterObjetivo', component: PromoterObjetivo}
         ,{path:'/Produtos', component: Produtos}
+        ,{path:'/ShopPrecoProduto/:id', component: ShopPrecoProduto}
     ]
 })
