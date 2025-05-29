@@ -55,38 +55,31 @@
                       <b-col cols="3">
                           <div class="inputValor">
                                 <label class="text-sm">Valor</label>
-                                <!-- <b-form-input
-                                    class="text-right"
-                                    size="sm"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    v-model.number="dado.valor"
-                                    @change="marcarAlterado(dado)"
-                                    placeholder="Valor"
-                                ></b-form-input> -->
                                 <b-form-input
-                                    size="sm"
-                                    type="text"
-                                    v-model="dado.valor"
-                                    @input="formatarNumero(dado)"
-                                    placeholder="Valor"
-                                    class="text-right"
-                                    />
+                                size="sm"
+                                type="text"
+                                inputmode="decimal"
+                                pattern="[0-9]*[.,]?[0-9]*"
+                                v-model="dado.valor"
+                                @change="marcarAlterado(dado)"
+                                placeholder="Valor"
+                                class="text-right"
+                                />
                             </div>
                       </b-col>
                       <b-col cols="3">
                         <label class="text-sm">Estoque</label>
                           <div class="inputQtd">
-                              <b-form-input
-                                  size="sm"
-                                  aria-placeholder="Qtd"
-                                  type="number"
-                                  min="0"
-                                  v-model.number="dado.qtdest"
-                                  @change="marcarAlterado(dado)"
-                                  placeholder="Qtd"
-                              ></b-form-input>
+                            <b-form-input
+                                size="sm"
+                                inputmode="numeric" 
+                                pattern="[0-9]*" 
+                                type="text"      
+                                v-model="dado.qtdest"
+                                @input="formatarQtd(dado)"
+                                placeholder="Qtd"
+                                class="text-right"
+                            />
                             </div>
                       </b-col>
                   </b-row>
@@ -156,10 +149,20 @@ export default {
       marcarAlterado(produto) {
         produto.alterado = true;
       },
+    prepararParaSalvar(produto) {
+        const raw = String(produto.valor || '').replace(',', '.');
+        const valor = parseFloat(raw);
+        return isNaN(valor) ? 0 : valor;
+    },
       salvar() {
         const itensParaSalvar = this.produtos.filter(
           (p) => p.alterado && (p.qtdest > 0 || p.valor > 0)
-        );
+        ).map(p => ({
+        idshoppreco: this.idshoppreco,    
+        idproduto: p.idproduto,
+        qtdest: parseInt(p.qtdest) || 0,
+        valor: this.prepararParaSalvar(p)
+      }));
         console.log('itensParaSalvar', itensParaSalvar)
         if (itensParaSalvar.length === 0) {
           this.$store.state.mensagens = [
@@ -174,7 +177,7 @@ export default {
         }
   
         this.$http
-          .post(`/insertShopPrecoItens`, itensParaSalvar)
+          .post(`/insertShopPrecoItem`, itensParaSalvar)
           .then(() => {
             this.$store.state.mensagens = [
               {
@@ -184,24 +187,27 @@ export default {
                 dismissCountDown: 0,
               },
             ];
-            this.carregarProdutos();
+            this.obterdados();
           })
           .catch((err) => {
             console.error(err);
           });
       },
 
-        formatarNumero(dado) {
-            // Aceita apenas números e ponto, e converte vírgula em ponto
-            let limpo = dado.valor.toString().replace(',', '.').replace(/[^0-9.]/g, '');
-            // Se houver mais de um ponto, mantém só o primeiro
-            const partes = limpo.split('.');
-            if (partes.length > 2) {
-            limpo = partes[0] + '.' + partes.slice(1).join('');
-            }
-            dado.valor = limpo;
-            this.marcarAlterado(dado);
-        },
+      formatarNumero(dado) {
+        let val = String(dado.valor).replace(',', '.').replace(/[^0-9.]/g, '');
+        // limita para 2 casas decimais
+        val = parseFloat(val).toFixed(2);
+        if (!isNaN(val)) {
+            dado.valor = val;
+            dado.alterado = true;
+        }
+    },
+    formatarQtd(dado) {
+    let val = String(dado.qtdest).replace(/\D/g, ''); // remove não dígitos
+    dado.qtdest = val === '' ? 0 : parseInt(val);
+    dado.alterado = true;
+    },
 
       ordernarLista() {
           this.produtos.sort((a, b) => a.grupo.localeCompare(b.grupo))
@@ -211,7 +217,7 @@ export default {
           //console.log('Token', localStorage.getItem('MQToken'))
           this.$http.get(`loadShopprecoproduto?idshoppreco=${this.idshoppreco}`).then(res => {
               //console.log(res.data)
-              this.produtos = res.data.map((item) => ({...item, qtdest: item.qtdest || 0,valor: item.valor || 0}));
+              this.produtos = res.data.map((item) => ({...item, idshoppreco: this.idshoppreco, qtdest: item.qtdest ,valor: item.valor }));
               this.$store.state.loading = false
           })
       },
