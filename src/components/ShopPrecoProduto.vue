@@ -155,6 +155,7 @@ export default {
         return isNaN(valor) ? 0 : valor;
     },
       salvar() {
+        this.$store.state.loading = !this.$store.state.loading
         const itensParaSalvar = this.produtos.filter(
           (p) => p.alterado && (p.qtdest > 0 || p.valor > 0)
         ).map(p => ({
@@ -163,7 +164,7 @@ export default {
         qtdest: parseInt(p.qtdest) || 0,
         valor: this.prepararParaSalvar(p)
       }));
-        console.log('itensParaSalvar', itensParaSalvar)
+        // console.log('itensParaSalvar', itensParaSalvar)
         if (itensParaSalvar.length === 0) {
           this.$store.state.mensagens = [
             {
@@ -229,7 +230,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #listarProduto {
-  font-size: 0.9em;
+  font-size: 0.8em;
   min-height: 70px;
   position: relative; /* Necessário para posicionar filhos com absolute */
 }
